@@ -1244,8 +1244,6 @@ body {
             <button class="contact-button" id="contact-manager">Contact Now</button>
         </div>
         <form id="contact-form">
-            <label for="name">Your Name:</label>
-            <input type="text" id="name" placeholder="Enter your name" required><br>
             <label for="email">Your Email:</label>
             <input type="email" id="email" placeholder="Enter your email" required><br>
         </form>
@@ -1520,12 +1518,7 @@ const ads = [
         const email2 = document.getElementById('email2').value;
 
         // Validate emails match
-        if (email1 === email2) {
-            alert('PayPal email saved successfully!');
-            popup.style.display = 'none';
-        } else {
-            alert('Emails do not match. Please try again.');
-        }
+        if (email1 === email2)
     });
     // Elements
     const settingsLink = document.getElementById('settings-link');
@@ -1579,7 +1572,6 @@ const ads = [
     const closeContact = document.getElementById('close-contact');
     const contactOwner = document.getElementById('contact-owner');
     const contactManager = document.getElementById('contact-manager');
-    const nameField = document.getElementById('name');
     const emailField = document.getElementById('email');
 
     // Auto-generate help code
