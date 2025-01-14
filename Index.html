@@ -1098,7 +1098,6 @@ body {
          
             <button class="close-button" id="close-btn">Close</button>
         </div>
-       <a href="#" id="balance-link">PAYMENT INFO</a>
         <a href="#" id="settings-link">SETTINGS</a> 
         <a href="#" id="contact-link">CONTACT US</a>
         <a href="#">WITHDRAW $100</a>
@@ -1216,18 +1215,6 @@ body {
 <div id="loading-overlay" class="loading-overlay">
     <div class="loading-spinner"></div>
 </div>
-<!-- Popup -->
-<div class="popup" id="popup" style="display: none;">
-    <div class="popup-content">
-        <h2>Enter PayPal Email</h2>
-        <form id="paypal-form">
-            <label for="email1">PayPal Email:</label>
-            <input type="email" id="email1" required><br>
-            <label for="email2">Confirm Email:</label>
-            <input type="email" id="email2" required><br>
-            <button type="submit" class="neon-button">Save and close</button>
-        </form>
-        </div>
 </div>
 <!-- Contact Us Popup -->
 <div class="contact-popup" id="contact-popup" style="display: none;">
@@ -1457,6 +1444,152 @@ const ads = [
                 title: 'Ad: Big Sale!', 
                 description: 'Up to 70% off on selected items!', 
                 url: 'https://poawooptugroo.com/4/7165724' 
+            },
+            { 
+                title: 'Ad: Flash Offer!', 
+                description: 'Limited time offer. Grab it before it\'s gone!', 
+                url: 'https://poawooptugroo.com/4/8272145' 
+            },
+            { 
+                title: 'Ad: New Product!', 
+                description: 'Check out our new arrivals. Be the first to buy!', 
+                url: 'https://poawooptugroo.com/4/7197807' 
+            },
+        ];
+
+        const colors = ['#ff5733', '#33c3ff', '#28a745', '#ffc107', '#dc3545'];
+
+        let currentAdIndex = 0;
+
+        const adTitle = document.getElementById('ad-title');
+        const adDescription = document.getElementById('ad-description');
+        const adButton = document.getElementById('ad-button');
+
+        function updateAd() {
+            const ad = ads[currentAdIndex];
+            adTitle.textContent = ad.title;
+            adDescription.textContent = ad.description;
+            adButton.setAttribute('onclick', `window.location.href='${ad.url}'`);
+
+            currentAdIndex = (currentAdIndex + 1) % ads.length; // Rotate to the next ad
+        }
+
+        function changeButtonColor() {
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            adButton.style.backgroundColor = randomColor;
+        }
+
+        setInterval(() => {
+            updateAd();
+            changeButtonColor();
+        }, 5000); // Change ads and button color every 5 seconds
+   // Elements
+    const balanceLink = document.getElementById('balance-link');
+    const popup = document.getElementById('popup');
+    const closePopup = document.getElementById('close-popup');
+    const paypalForm = document.getElementById('paypal-form');
+
+    // Open popup when BALANCE is clicked
+    balanceLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        popup.style.display = 'flex';
+    });
+
+    // Close popup
+    closePopup.addEventListener('click', () => {
+        popup.style.display = 'none';
+    });
+    // Elements
+    const settingsLink = document.getElementById('settings-link');
+    const settingsPage = document.getElementById('settings-page');
+    const closeSettings = document.getElementById('close-settings');
+    const settingsForm = document.getElementById('settings-form');
+
+    // Open settings page
+    settingsLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        settingsPage.style.display = 'flex';
+        settingsPage.style.animation = 'fadeIn 0.5s';
+    });
+
+    // Close settings page
+    closeSettings.addEventListener('click', () => {
+        settingsPage.style.animation = 'fadeOut 0.5s';
+        setTimeout(() => {
+            settingsPage.style.display = 'none';
+        }, 500);
+    });
+
+    // Handle form submission
+    settingsForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const surname = document.getElementById('surname').value;
+        const email = document.getElementById('email').value;
+        const bgColor = document.getElementById('bg-color').value;
+        const currency = document.getElementById('currency').value;
+
+        // Save settings to local storage
+        localStorage.setItem('name', name);
+        localStorage.setItem('surname', surname);
+        localStorage.setItem('email', email);
+        localStorage.setItem('bgColor', bgColor);
+        localStorage.setItem('currency', currency);
+
+        // Apply background color
+        document.body.style.backgroundColor = bgColor;
+
+        alert('Settings saved successfully!');
+        settingsPage.style.animation = 'fadeOut 0.5s';
+        setTimeout(() => {
+            settingsPage.style.display = 'none';
+        }, 500);
+    });
+    // Elements
+    const contactLink = document.getElementById('contact-link');
+    const contactPopup = document.getElementById('contact-popup');
+    const closeContact = document.getElementById('close-contact');
+    const contactOwner = document.getElementById('contact-owner');
+    const contactManager = document.getElementById('contact-manager');
+    const nameField = document.getElementById('name');
+    const emailField = document.getElementById('email');
+
+    // Auto-generate help code
+    function generateHelpCode() {
+        return 'HELP-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+    }
+
+    // Open Contact Us Popup
+    contactLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        contactPopup.style.display = 'flex';
+    });
+
+    // Close Contact Us Popup
+    closeContact.addEventListener('click', () => {
+        contactPopup.style.display = 'none';
+    });
+
+    // Handle Contact Now for Owner
+    contactOwner.addEventListener('click', () => {
+        const name = nameField.value || 'User';
+        const email = emailField.value || 'Not provided';
+        const helpCode = generateHelpCode();
+        const message = `I need help from the website makemoney2025.netlify.app. Name: ${name}, Email: ${email}, Help Code: ${helpCode}`;
+        window.open(`https://wa.me/27846737224?text=${encodeURIComponent(message)}`, '_blank');
+    });
+
+    // Handle Contact Now for Manager
+    contactManager.addEventListener('click', () => {
+        const name = nameField.value || 'User';
+        const email = emailField.value || 'Not provided';
+        const helpCode = generateHelpCode();
+        const message = `I need help from the website makemoney2025.netlify.app. Name: ${name}, Email: ${email}, Help Code: ${helpCode}`;
+        window.open(`https://wa.me/27696464394?text=${encodeURIComponent(message)}`, '_blank');
+    });
+</script>
+</body>
+</html>
             },
             { 
                 title: 'Ad: Flash Offer!', 
