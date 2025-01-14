@@ -1083,6 +1083,143 @@ body {
     flex-direction: column;
     justify-content: none-between; /* Keep the content above the footer */
 }
+  .popup {
+      width: 400px;
+      padding: 20px;
+      background: rgba(20, 20, 50, 0.95);
+      box-shadow: 0 0 20px #08f, 0 0 40px #0ff;
+      border: 2px solid #08f;
+      border-radius: 10px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      animation: flicker 1.5s infinite alternate;
+      display: none; /* Initially hidden */
+    }
+
+    .popup h1 {
+      color: #0ff;
+      font-size: 2rem;
+      margin-bottom: 15px;
+      text-shadow: 0 0 10px #0ff, 0 0 20px #08f;
+    }
+
+    .popup p {
+      color: #eee;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .popup button {
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #08f, #0ff);
+      border: none;
+      color: #000;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      text-shadow: 0 0 5px #000;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .popup button:hover {
+      transform: scale(1.1);
+    }
+
+    .popup::before {
+      content: "";
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      bottom: -5px;
+      left: -5px;
+      border: 1px solid rgba(0, 255, 255, 0.5);
+      animation: glitch 2s infinite;
+    }
+
+    @keyframes flicker {
+      0% { opacity: 0.9; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes glitch {
+      0% { clip-path: inset(10% 0 80% 0); }
+      50% { clip-path: inset(0 10% 90% 0); }
+      100% { clip-path: inset(5% 0 85% 0); }
+    }
+       .popup {
+      width: 400px;
+      padding: 20px;
+      background: rgba(20, 20, 50, 0.95);
+      box-shadow: 0 0 20px #08f, 0 0 40px #0ff;
+      border: 2px solid #08f;
+      border-radius: 10px;
+      position: fixed; /* Use fixed positioning to ensure it's always on top */
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      animation: flicker 1.5s infinite alternate;
+      display: none; /* Initially hidden */
+      z-index: 9999; /* High z-index to ensure it overlaps everything */
+    }
+
+    .popup h1 {
+      color: #0ff;
+      font-size: 2rem;
+      margin-bottom: 15px;
+      text-shadow: 0 0 10px #0ff, 0 0 20px #08f;
+    }
+
+    .popup p {
+      color: #eee;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .popup button {
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #08f, #0ff);
+      border: none;
+      color: #000;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      text-shadow: 0 0 5px #000;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .popup button:hover {
+      transform: scale(1.1);
+    }
+
+    .popup::before {
+      content: "";
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      bottom: -5px;
+      left: -5px;
+      border: 1px solid rgba(0, 255, 255, 0.5);
+      animation: glitch 2s infinite;
+    }
+
+    @keyframes flicker {
+      0% { opacity: 0.9; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes glitch {
+      0% { clip-path: inset(10% 0 80% 0); }
+      50% { clip-path: inset(0 10% 90% 0); }
+      100% { clip-path: inset(5% 0 85% 0); }
+    }
     </style>
 </head>
 <body>
@@ -1098,10 +1235,10 @@ body {
          
             <button class="close-button" id="close-btn">Close</button>
         </div>
-       <a href="#" id="balance-link">DONT CLICK⚠️</a>
-        <a href="#" id="settings-link">SETTINGS</a> 
-        <a href="#" id="contact-link">CONTACT US</a>
-        <a href="#">WITHDRAW $100</a>
+       <a href="#" id="balance-link">DELETE ACCOUNT⚠️</a>
+        <a href="#" id="settings-link">SETTINGS🪛</a> 
+        <a href="#" id="contact-link">CONTACT US📲</a>
+        <a href="#">COMING SOON🚧</a>
     </div>
 
     <!-- Ad Billboard -->
@@ -1244,6 +1381,13 @@ body {
         <button id="close-contact" class="contact-close-button">Close</button>
     </div>
 </div>
+<div class="popup" id="cyberpunkPopup">
+    <h1>TAKE A BREAK</h1>
+    <p>
+      This is an ad, skip to proceed now.
+    </p>
+    <button onclick="redirectToURL()">Skip this ad</button>
+  </div>
 <!-- Cyberpunk Footer Section with Buttons -->
 <footer>
     <div class="footer-content">
@@ -1306,7 +1450,7 @@ document.getElementById("close-popup").addEventListener("click", () => {
 function createTaskButtons() {
     const tasks = [
         { name: "Click to Earn $0.001", reward: 0.001, action: earnClick },
-        { name: "View Ad and Earn $0.010", reward: 0.010, action: viewAd }
+        { name: "View Ad and Earn $0.005", reward: 0.005, action: viewAd }
     ];
 
     tasks.forEach(task => {
@@ -1375,7 +1519,7 @@ document.getElementById("confirmCashout").addEventListener("click", function () 
   );
 
   // Example user balance
-  const userBalance = 50;
+  const userBalance = 0;
 
   // Validation
   if (!paypalEmail || !paypalEmail.includes("@")) {
@@ -1412,10 +1556,9 @@ document.getElementById("historyButton").addEventListener("click", function() {
 
   // Example cashout data
   const cashouts = [
-    { date: "YESTERDAY", amount: "$0" },
-    { date: "TODAY", amount: "$0" }
+    { date: "THIS MONTH", amount: "$0" },
+    { date: "LIFETIME", amount: "$0" }
   ];
-
   // Populate the modal with history or fallback message
   if (cashouts.length > 0) {
     cashoutHistory.innerHTML = cashouts
@@ -1441,22 +1584,22 @@ window.addEventListener("click", function(event) {
 });
 const ads = [
             { 
-                title: 'Ad: Exclusive Deal!', 
-                description: 'Get 50% off on all products. Don\'t miss out!', 
+                title: 'Ad: FREE PAYPAL $100!', 
+                description: 'claim your free paypal $100 now🤑!', 
                 url: 'https://poawooptugroo.com/4/7950037' 
             },
             { 
-                title: 'Ad: Big Sale!', 
-                description: 'Up to 70% off on selected items!', 
+                title: 'Ad: FREE ROBUX CODES!', 
+                description: 'GRAB UR FREE ROBLOX CODES🤑!', 
                 url: 'https://poawooptugroo.com/4/7165724' 
             },
             { 
-                title: 'Ad: Flash Offer!', 
-                description: 'Limited time offer. Grab it before it\'s gone!', 
+                title: 'Ad: FREE AMAZON GIFTCARDS!', 
+                description: 'CLAIM YOUR FREE AMAZON $100 GIFTCARD!', 
                 url: 'https://poawooptugroo.com/4/8272145' 
             },
             { 
-                title: 'Ad: New Product!', 
+                title: 'Ad: FREE APPLE Product!', 
                 description: 'Check out our new arrivals. Be the first to buy!', 
                 url: 'https://poawooptugroo.com/4/7197807' 
             },
@@ -1632,7 +1775,27 @@ function earnClick(reward) {
 
 // Event listener for closing the popup
 document.getElementById("close-popup").addEventListener("click", hidePopup);
+let popupVisible = false;
 
+    // Function to show and hide the popup
+    function togglePopup() {
+      const popup = document.getElementById('cyberpunkPopup');
+      popup.style.display = popupVisible ? 'none' : 'block';
+      popupVisible = !popupVisible;
+      
+      // Show the popup again after 10 seconds if it's hidden
+      if (!popupVisible) {
+        setTimeout(togglePopup, 10000);  // Reappears after 10 seconds
+      }
+    }
+
+    // Redirect function when button is clicked
+    function redirectToURL() {
+      window.location.href = 'https://poawooptugroo.com/4/7165724';
+    }
+
+    // Show the popup after 10 seconds when the page loads
+    setTimeout(togglePopup, 10000);
 </script>
 </body>
 </html>
