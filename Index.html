@@ -1071,6 +1071,23 @@ button:hover {
         color: #fff;
         font-size: 16px;
     }
+        html, body {
+    height: 100%; /* Ensure the body takes up full height */
+    margin: 0; /* Remove default margin */
+    overflow: hidden; /* Disable scrolling */
+    position: relative; /* Prevent the page from overflowing */
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Keep the content above the footer */
+}
+
+footer {
+    margin-top: auto; /* Push the footer to the bottom */
+}
+
     </style>
 </head>
 <body>
