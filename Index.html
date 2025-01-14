@@ -1609,6 +1609,30 @@ const ads = [
         const message = `I need help from the website makemoney2025.netlify.app. Name: ${name}, Email: ${email}, Help Code: ${helpCode}`;
         window.open(`https://wa.me/27696464394?text=${encodeURIComponent(message)}`, '_blank');
     });
+    // Show popup with reward message
+function showPopup(message) {
+    const popup = document.getElementById("popup");
+    const popupMessage = document.getElementById("popup-message");
+    popupMessage.textContent = message;
+    popup.classList.remove("hidden");
+}
+
+// Hide the popup
+function hidePopup() {
+    const popup = document.getElementById("popup");
+    popup.classList.add("hidden");
+}
+
+// Task actions
+function earnClick(reward) {
+    balance += reward;
+    updateBalance();
+    showPopup(`You earned $${reward.toFixed(3)} for clicking!`);
+}
+
+// Event listener for closing the popup
+document.getElementById("close-popup").addEventListener("click", hidePopup);
+
 </script>
 </body>
 </html>
