@@ -1,0 +1,1611 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Modern Earning Section</title>
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #00aaff, #0044cc);
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            width: 100%;
+            background-color: black;
+            padding: 5px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .balance {
+            background-color: #b5ff60;
+            color: black;
+            padding: 3px 10px;
+            font-size: 1rem;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .toggle {
+            background: none;
+            border: none;
+            padding: 10px 15px;
+            font-size: 2rem;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .close-button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            font-size: 1rem;
+            border: 1px solid #444;
+            border-radius: 5px;
+            text-align: center;
+            background-color: #444;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        /* Ad Billboard Styles */
+        .ad-billboard {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, #0099ff, #003366);
+            border-top: 4px solid black;
+            border-bottom: 4px solid black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            gap: 10px;
+        }
+
+        .ad-title {
+            font-size: 1rem;
+            color: black;
+        }
+
+        .ad-description {
+            font-size: 0.85rem;
+            color: white;
+        }
+
+        .ad-button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 90%;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .ad-button:hover {
+            background-color: #cc0000;
+            transform: scale(1.05);
+        }
+
+        /* Icon Section Styles */
+        .icon-section {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 20px;
+            padding: 10px 20px;
+        }
+
+        .icon-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Adjusted icon container to make icons fill the circle */
+        .icon {
+            width: 70px;
+            height: 70px;
+            background-color: #333;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: white;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures the image fills the container */
+        }
+
+        .icon-text {
+            font-size: 0.9rem;
+            color: white;
+            text-align: center;
+        }
+
+        /* Earning Section Styles */
+        .earning-section {
+            width: 100%;
+            background: linear-gradient(135deg, #ff6600, #cc3300);
+            padding: 40px 20px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            margin-top: 40px;
+            border-top: 4px solid #333;
+        }
+
+        .earning-section h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .earning-section p {
+            font-size: 1rem;
+            margin-bottom: 20px;
+            color: #f1f1f1;
+        }
+
+        .earning-section button {
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .earning-section button:hover {
+            background-color: #cc0000;
+            transform: scale(1.05);
+        }
+        /* Cyberpunk Popup Styles */
+.task-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent dark background */
+    z-index: 1001;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background: linear-gradient(135deg, #111, #333);
+    border: 2px solid #0ff;
+    box-shadow: 0 0 15px #0ff, 0 0 30px #ff00ff;
+    color: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    width: 80%;
+    max-width: 500px;
+}
+
+.popup-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #ff00ff;
+    text-shadow: 0 0 10px #ff00ff, 0 0 20px #0ff;
+    margin-bottom: 20px;
+}
+
+#task-list {
+    margin-bottom: 20px;
+}
+
+.task-button {
+    background: linear-gradient(135deg, #ff00ff, #0ff);
+    color: black;
+    font-size: 1.1rem;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 10px 0;
+    width: 100%;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-weight: bold;
+    box-shadow: 0 0 10px #0ff, 0 0 20px #ff00ff;
+}
+
+.task-button:hover {
+    background: linear-gradient(135deg, #0ff, #ff00ff);
+    color: white;
+    box-shadow: 0 0 20px #ff00ff, 0 0 30px #0ff;
+}
+
+.close-popup {
+    background: linear-gradient(135deg, #ff0000, #ff8000);
+    color: white;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 0 10px #ff8000, 0 0 20px #ff0000;
+    transition: all 0.3s ease;
+}
+
+.close-popup:hover {
+    background: linear-gradient(135deg, #ff8000, #ff0000);
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #0ff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+}
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #000; /* Pure black for that punk feel */
+      color: #fff;
+      text-align: center;
+      padding: 20px 0;
+      box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    footer .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    footer button {
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    footer button:hover {
+      transform: scale(1.1);
+      opacity: 0.9;
+    }
+
+    .green {
+      background-color: #32CD32; /* Modern green */
+      color: #fff;
+    }
+
+    .red {
+      background-color: #D40000; /* Bold red */
+      color: #fff;
+    }
+
+    .blue {
+      background-color: #1E90FF; /* Cool blue */
+      color: #fff;
+    }
+
+/* Cyberpunk Footer Styling */
+footer {
+    background: #111; /* Dark background */
+    color: #00ff99; /* Neon green text */
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    width: 100%;
+    box-shadow: 0 5px 15px rgba(0, 255, 153, 0.2); /* Soft neon glow around */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+}
+
+/* Footer Content */
+.footer-content p {
+    font-size: 1.1rem;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: neonGlow 1.5s ease-in-out infinite alternate;
+    flex-grow: 1;
+    text-align: left;
+}
+
+/* Footer Buttons Container */
+.footer-buttons {
+    display: flex;
+    gap: 50px;
+}
+
+/* Common Button Styling */
+button {
+    padding: 2px 27px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+}
+
+/* Cashout Button (Green) */
+.cashout-btn {
+    background-color: #00ff99; /* Neon Green */
+    color: black;
+}
+
+/* Cashout History Button (Red) */
+.history-btn {
+    background-color: #ff4444; /* Neon Red */
+    color: white;
+}
+
+/* Neon Glow Animation */
+@keyframes neonGlow {
+    0% {
+        text-shadow: 0 0 5px #00ff99, 0 0 10px #00ff99, 0 0 20px #00ff99;
+    }
+    100% {
+        text-shadow: 0 0 15px #00ff99, 0 0 30px #00ff99, 0 0 60px #00ff99;
+    }
+}
+
+/* Hover Glow Animation */
+@keyframes neonGlowHover {
+    0% {
+        text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+    }
+    100% {
+        text-shadow: 0 0 15px #ff00ff, 0 0 30px #ff00ff, 0 0 60px #ff00ff;
+    }
+}
+/* Ensure the body content doesn't scroll beyond the footer */
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensures the footer stays at the bottom */
+}
+
+/* Main content container */
+.main-content {
+    flex-grow: 1; /* Take up the remaining space */
+    overflow: hidden; /* Prevent scrolling beyond the main content */
+}
+
+/* Cyberpunk Footer Styling */
+footer {
+    position: fixed; /* Fix the footer to the bottom */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #111; /* Dark background */
+    color: #00ff99; /* Neon green text */
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 255, 153, 0.2); /* Soft neon glow around */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    z-index: 9999; /* Make sure it's on top */
+}
+
+/* Footer Content */
+.footer-content p {
+    font-size: 1.1rem;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: neonGlow 1.5s ease-in-out infinite alternate;
+    flex-grow: 1;
+    text-align: left;
+}
+
+/* Footer Buttons Container */
+.footer-buttons {
+    display: flex;
+    gap: 50px;
+}
+
+/* Common Button Styling */
+button {
+    padding: 2px 27px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+}
+
+/* Cashout Button (Green) */
+.cashout-btn {
+    background-color: #00ff99; /* Neon Green */
+    color: black;
+}
+
+/* Cashout History Button (Red) */
+.history-btn {
+    background-color: #ff4444; /* Neon Red */
+    color: white;
+}
+
+/* Neon Glow Animation */
+@keyframes neonGlow {
+    0% {
+        text-shadow: 0 0 5px #00ff99, 0 0 10px #00ff99, 0 0 20px #00ff99;
+    }
+    100% {
+        text-shadow: 0 0 15px #00ff99, 0 0 30px #00ff99, 0 0 60px #00ff99;
+    }
+}
+
+/* Hover Glow Animation */
+@keyframes neonGlowHover {
+    0% {
+        text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+    }
+    100% {
+        text-shadow: 0 0 15px #ff00ff, 0 0 30px #ff00ff, 0 0 60px #ff00ff;
+    }
+}
+/* Prevent text selection on all elements */
+* {
+    -webkit-user-select: none; /* Prevent text selection for WebKit browsers */
+    -moz-user-select: none;    /* For Firefox */
+    -ms-user-select: none;     /* For Internet Explorer/Edge */
+    user-select: none;         /* Standard property */
+}
+
+/* Allow selection for specific elements if needed */
+.allow-selection {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+/* Cashout Modal Styles */
+.cashout-modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, #0d0d0d, #000000);
+}
+
+/* Modal Content */
+.cashout-modal-content {
+  background: linear-gradient(145deg, #1d1d1d, #101010);
+  margin: 10% auto;
+  padding: 20px;
+  border: 2px solid #00ffcc;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 0 20px #00ffcc, 0 0 40px #ff007f;
+  color: #fff;
+  font-family: "Orbitron", sans-serif;
+  text-align: center;
+}
+
+/* Close Button */
+.close-cashout {
+  background: #ff004c;
+  color: white;
+  font-size: 16px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  width: 100%
+}
+
+.close-cashout:hover {
+  background: #cc003e;
+  transform: scale(1.05);
+}
+
+/* Inputs */
+.cashout-input,
+.cashout-dropdown {
+  width: 90%;
+  padding: 10px;
+  margin: 15px 0;
+  font-size: 16px;
+  border: 2px solid #00ffcc;
+  border-radius: 8px;
+  background: #1a1a1a;
+  color: white;
+  outline: none;
+}
+
+.cashout-input:focus,
+.cashout-dropdown:focus {
+  border-color: #ff007f;
+  box-shadow: 0 0 8px #ff007f;
+}
+
+/* Confirm Button */
+.confirm-cashout {
+  background: linear-gradient(to right, #00ffcc, #ff007f);
+  color: white;
+  font-size: 16px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.confirm-cashout:hover {
+  transform: scale(1.05);
+}
+
+/* Warning Message */
+.cashout-warning {
+  color: #ff007f;
+  font-size: 14px;
+  margin: 10px 0;
+  text-shadow: 0 0 10px #ff007f;
+}
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, #0d0d0d, #000000);
+}
+
+/* Modal Content */
+.modal-content {
+  background: linear-gradient(145deg, #1d1d1d, #101010);
+  margin: 10% auto;
+  padding: 20px;
+  border: 2px solid #ff007f;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 0 20px #ff007f, 0 0 40px #00d1ff;
+  color: #fff;
+  font-family: "Orbitron", sans-serif; /* Futuristic font */
+  text-align: center;
+}
+
+/* Close Button */
+.close-button {
+  float: right;
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  transition: color 0.3s;
+  width: 100%
+}
+
+.close-button:hover {
+  color: #ff007f;
+}
+
+/* Header */
+.modal-content h2 {
+  font-size: 2em;
+  text-transform: uppercase;
+  background: linear-gradient(to right, #ff007f, #00d1ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 20px;
+}
+
+/* History Items */
+.modal-content p {
+  font-size: 1.2em;
+  color: #00d1ff;
+  margin: 10px 0;
+  text-shadow: 0 0 10px #00d1ff;
+}
+
+/* No Cashouts Message */
+.modal-content .no-history {
+  font-size: 1.2em;
+  color: #ff007f;
+  text-shadow: 0 0 10px #ff007f;
+}
+
+/* Footer Button */
+.footer-button {
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px 20px;
+  background: linear-gradient(to right, #ff007f, #00d1ff);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-family: "Orbitron", sans-serif;
+  text-transform: uppercase;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.footer-button:hover {
+  background: linear-gradient(to right, #00d1ff, #ff007f);
+  transform: scale(1.05);
+}
+/* Icon Section Styling */
+.icon-section {
+    display: flex;
+    justify-content: center; /* Center the icons horizontally */
+    flex-wrap: wrap; /* Allow wrapping for smaller screens */
+    gap: 20px; /* Space between icon containers */
+    margin-top: 20px;
+}
+
+/* Icon Container Styling */
+.icon-container {
+    display: flex;
+    flex-direction: column; /* Stack the icon and button vertically */
+    align-items: center; /* Center the content inside */
+    text-align: center;
+    margin: 10px;
+    text-decoration: none;
+}
+
+/* Icon Styling */
+.icon img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    margin-bottom: 10px; /* Space between the icon and button */
+}
+
+/* Hover Effect for Icon */
+.icon-container:hover .icon img {
+    transform: scale(1.1); /* Slight zoom-in on hover */
+}
+
+/* Text Styling (Button) */
+.icon-text {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    background-color: red; /* Button-like blue color */
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover Effect for Text */
+.icon-container:hover .icon-text {
+    background-color: #red; /* Darker blue on hover */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .icon-section {
+        gap: 10px; /* Reduce spacing for smaller screens */
+    }
+    .icon img {
+        width: 60px;
+        height: 60px;
+    }
+    .icon-text {
+        font-size: 12px;
+        padding: 8px 16px;
+    }
+}
+  /* Popup styles */
+    .popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popup-content {
+        background: #161616;
+        border: 2px solid #0affff;
+        border-radius: 10px;
+        padding: 30px;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0 0 20px #0affff;
+        text-align: center;
+    }
+
+    .popup-content h2 {
+        color: #fff;
+        text-shadow: 0 0 5px #0affff;
+        margin-bottom: 20px;
+    }
+
+    .popup-content label {
+        font-size: 16px;
+        display: block;
+        margin: 10px 0 5px;
+        color: #0affff;
+        text-shadow: 0 0 5px #0affff;
+    }
+
+    .popup-content input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #0affff;
+        border-radius: 5px;
+        background: #000;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .neon-button {
+        width: 100%;
+        padding: 15px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #0affff;
+        background: #121212;
+        border: 2px solid #0affff;
+        border-radius: 5px;
+        text-shadow: 0 0 5px #0affff, 0 0 10px #0affff;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .neon-button:hover {
+        background: #0affff;
+        color: #121212;
+        text-shadow: none;
+    }
+    /* Full-screen settings page */
+    .settings-page {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .settings-content {
+        background: #161616;
+        border: 2px solid #0affff;
+        border-radius: 10px;
+        padding: 30px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 0 20px #0affff;
+        text-align: center;
+        animation: fadeIn 0.5s;
+    }
+
+    .settings-content h2 {
+        color: #fff;
+        text-shadow: 0 0 5px #0affff;
+        margin-bottom: 20px;
+    }
+
+    .settings-content label {
+        font-size: 16px;
+        display: block;
+        margin: 10px 0 5px;
+        color: #0affff;
+        text-shadow: 0 0 5px #0affff;
+    }
+
+    .settings-content input, .settings-content select {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #0affff;
+        border-radius: 5px;
+        background: #000;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .neon-button {
+        width: 100%;
+        padding: 15px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #0affff;
+        background: #121212;
+        border: 2px solid #0affff;
+        border-radius: 5px;
+        text-shadow: 0 0 5px #0affff, 0 0 10px #0affff;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .neon-button:hover {
+        background: #0affff;
+        color: #121212;
+        text-shadow: none;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 0;
+        }
+    }
+      /* Contact Us Popup */
+    .contact-popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 128, 0, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .contact-content {
+        background: #1a1a1a;
+        border: 2px solid #00ff00;
+        border-radius: 10px;
+        padding: 30px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 0 20px #00ff00;
+        text-align: center;
+    }
+
+    .contact-content h2 {
+        color: #00ff00;
+        text-shadow: 0 0 5px #00ff00;
+        margin-bottom: 20px;
+    }
+
+    .profile {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .profile img {
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        margin-bottom: 10px;
+        border: 3px solid #00ff00;
+    }
+
+    .profile h3 {
+        color: #00ff00;
+        margin-bottom: 10px;
+        text-shadow: 0 0 5px #00ff00;
+    }
+
+    .contact-button {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        color: #1a1a1a;
+        background: #00ff00;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .contact-button:hover {
+        background: #00cc00;
+    }
+
+    .contact-close-button {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        color: #00ff00;
+        background: transparent;
+        border: 2px solid #00ff00;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s, color 0.3s;
+    }
+
+    .contact-close-button:hover {
+        background: #00ff00;
+        color: #1a1a1a;
+    }
+
+    .contact-content label {
+        font-size: 16px;
+        display: block;
+        margin: 10px 0 5px;
+        color: #00ff00;
+        text-shadow: 0 0 5px #00ff00;
+    }
+
+    .contact-content input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #00ff00;
+        border-radius: 5px;
+        background: #000;
+        color: #fff;
+        font-size: 16px;
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <button class="toggle">☰</button>
+        <div class="balance">BALANCE: $0.000</div>
+    </header>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+       <h1>MAKE.MONEY</h1>
+        <div class="sidebar-header">
+         
+            <button class="close-button" id="close-btn">Close</button>
+        </div>
+       <a href="#" id="balance-link">PAYMENT INFO</a>
+        <a href="#" id="settings-link">SETTINGS</a> 
+        <a href="#" id="contact-link">CONTACT US</a>
+        <a href="#">WITHDRAW $100</a>
+    </div>
+
+    <!-- Ad Billboard -->
+    <div class="ad-billboard">
+        <div class="ad-title" id="ad-title">Ad: Exclusive Deal!</div>
+        <div class="ad-description" id="ad-description">Get 50% off on all products. Don't miss out!</div>
+        <button class="ad-button" id="ad-button">Learn More</button>
+    </div>
+
+    <!-- Icon Section -->
+<!-- Icon Section -->
+<div class="icon-section">
+    <!-- REMOVE ADS Icon -->
+    <a href="https://soloshopperads.netlify.app" target="_blank" class="icon-container">
+        <div class="icon">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcHzFzkq9zzMSrQKaR9scEc2w6uMbOlyQ8-6FH7cker74dgD_JiCLELEQ&s=10" alt="Remove Ads">
+        </div>
+        <div class="icon-text">REMOVE ADS</div>
+    </a>
+    
+    <!-- REFER & EARN Icon -->
+    <a href="https://soloshopperrefer.netlify.app" target="_blank" class="icon-container">
+        <div class="icon">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvNQECMEm5TFaAsf0IiF6IUa6MK1k2SBhZxgo1o3mbFdnQIzqAe6dCB5M&s=10" alt="Refer & Earn">
+        </div>
+        <div class="icon-text">REFER & EARN</div>
+    </a>
+</div>
+<!-- Full-Screen Settings Page -->
+<div class="settings-page" id="settings-page" style="display: none;">
+    <div class="settings-content">
+        <h2>Settings</h2>
+        <form id="settings-form">
+            <label for="name">Change Name:</label>
+            <input type="text" id="name" placeholder="Enter your name"><br>
+            <label for="surname">Change Surname:</label>
+            <input type="text" id="surname" placeholder="Enter your surname"><br>
+            <label for="email">Change Email:</label>
+            <input type="email" id="email" placeholder="Enter your email"><br>
+            <label for="bg-color">Change Background Color:</label>
+            <input type="color" id="bg-color"><br>
+            <label for="currency">Change Currency:</label>
+            <select id="currency">
+                <option value="usd">USD</option>
+                <option value="eur">EUR</option>
+                <option value="gbp">GBP</option>
+                <option value="inr">INR</option>
+            </select><br>
+            <button type="submit" class="neon-button">Save Changes</button>
+        </form>
+        <button id="close-settings" class="neon-button">Close</button>
+    </div>
+</div>
+
+
+    <!-- Earning Section -->
+    <div class="earning-section">
+        <h2>Start Earning Today!</h2>
+        <p>Unlock amazing ways to earn rewards !</p>
+        <button>Start Earning</button>
+    </div>
+<!-- Cyberpunk Task Popup -->
+<div class="task-popup" id="task-popup">
+    <div class="popup-content">
+        <h2 class="popup-title">💎 Tasks 💎</h2>
+        <div id="task-list">
+            <!-- Task buttons will be injected here via JavaScript -->
+        </div>
+        <button id="close-popup" class="close-popup">Close</button>
+    </div>
+</div>
+<!-- Cashout Button -->
+<!-- Cashout Modal -->
+<div id="cashoutModal" class="cashout-modal">
+  <div class="cashout-modal-content">
+    <h2>Cashout</h2>
+    <!-- PayPal Email Input -->
+    <input
+      type="email"
+      id="paypalEmail"
+      class="cashout-input"
+      placeholder="Enter your PayPal email"
+      required
+    />
+    <!-- Dropdown for Amount -->
+    <select id="cashoutAmount" class="cashout-dropdown">
+      <option value="" disabled selected>Select cashout amount</option>
+      <option value="10">$10</option>
+      <option value="20">$20</option>
+      <option value="30">$30</option>
+      <option value="40">$40</option>
+      <option value="50">$50</option>
+    </select>
+    <!-- Warning Message -->
+    <p class="cashout-warning">
+      * Warning: Take a screenshot of this screen in case you don't receive
+      your earnings.
+    </p>
+    <!-- Confirm Cashout Button -->
+    <button id="confirmCashout" class="confirm-cashout">Confirm Cashout</button>
+    <span id="closeCashoutModal" class="close-cashout">Close</span>
+  </div>
+</div>
+<!-- Cyberpunk Modal -->
+<div id="historyModal" class="modal">
+  <div class="modal-content">
+    <span id="closeModal" class="close-button">CLOSE</span>
+    <h2>Cashout History</h2>
+    <div id="cashoutHistory"></div>
+  </div>
+</div>
+<!-- Loading Overlay -->
+<div id="loading-overlay" class="loading-overlay">
+    <div class="loading-spinner"></div>
+</div>
+<!-- Popup -->
+<div class="popup" id="popup" style="display: none;">
+    <div class="popup-content">
+        <h2>Enter PayPal Email</h2>
+        <form id="paypal-form">
+            <label for="email1">PayPal Email:</label>
+            <input type="email" id="email1" required><br>
+            <label for="email2">Confirm Email:</label>
+            <input type="email" id="email2" required><br>
+            <button type="submit" class="neon-button">Save and close</button>
+        </form>
+        </div>
+</div>
+<!-- Contact Us Popup -->
+<div class="contact-popup" id="contact-popup" style="display: none;">
+    <div class="contact-content">
+        <h2>Contact Us</h2>
+        <div class="profile">
+            <img src="https://via.placeholder.com/100" alt="Owner Profile">
+            <h3>ITZ HOYOO</h3>
+            <button class="contact-button" id="contact-owner">Contact Now</button>
+        </div>
+        <div class="profile">
+            <img src="https://via.placeholder.com/100" alt="Manager Profile">
+            <h3>Presley Too Lit</h3>
+            <button class="contact-button" id="contact-manager">Contact Now</button>
+        </div>
+        <form id="contact-form">
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" placeholder="Enter your name" required><br>
+            <label for="email">Your Email:</label>
+            <input type="email" id="email" placeholder="Enter your email" required><br>
+        </form>
+        <button id="close-contact" class="contact-close-button">Close</button>
+    </div>
+</div>
+<!-- Cyberpunk Footer Section with Buttons -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-buttons">
+            <button id="cashoutButton" class="footer-button">Cashout</button>
+            <button id="historyButton" class="footer-button">History</button>
+        </div>
+    </div>
+</footer>
+
+    <script>
+        const toggleButton = document.querySelector('.toggle');
+        const sidebar = document.getElementById('sidebar');
+        const closeButton = document.getElementById('close-btn');
+
+        // Sidebar functionality
+        toggleButton.addEventListener('click', () => {
+            sidebar.style.left = '0';
+        });
+
+        closeButton.addEventListener('click', () => {
+            sidebar.style.left = '-250px';
+        });
+        // Set initial balance from localStorage or default to 0
+let balance = parseFloat(localStorage.getItem("balance")) || 0.000;
+const balanceDisplay = document.querySelector(".balance");
+const taskList = document.getElementById("task-list");
+
+// Update the balance display
+function updateBalance() {
+    balanceDisplay.textContent = `BALANCE: $${balance.toFixed(3)}`;
+    localStorage.setItem("balance", balance); // Save to localStorage
+}
+
+// Show loading screen
+function showLoadingScreen() {
+    document.getElementById("loading-overlay").style.display = "flex";
+    setTimeout(() => {
+        document.getElementById("loading-overlay").style.display = "none";
+        showTaskPopup();
+    }, 2000);
+}
+
+// Show the task popup
+function showTaskPopup() {
+    document.getElementById("task-popup").style.display = "flex";
+
+    // Prevent duplicating task buttons
+    if (taskList.childElementCount === 0) {
+        createTaskButtons();
+    }
+}
+
+// Close the task popup
+document.getElementById("close-popup").addEventListener("click", () => {
+    document.getElementById("task-popup").style.display = "none";
+});
+
+// Create task buttons dynamically
+function createTaskButtons() {
+    const tasks = [
+        { name: "Click to Earn $0.001", reward: 0.001, action: earnClick },
+        { name: "View Ad and Earn $0.010", reward: 0.010, action: viewAd }
+    ];
+
+    tasks.forEach(task => {
+        const button = document.createElement("button");
+        button.textContent = task.name;
+        button.className = "task-button";
+        button.addEventListener("click", () => task.action(task.reward));
+        taskList.appendChild(button);
+    });
+}
+
+// Task actions
+function earnClick(reward) {
+    balance += reward;
+    updateBalance();
+    alert(`You earned $${reward.toFixed(3)} for clicking!`);
+}
+
+let adButtonCooldown = false;
+
+function viewAd(reward) {
+    if (adButtonCooldown) {
+        alert("Please wait a few seconds before viewing another ad.");
+        return;
+    }
+
+    // First, update the balance
+    balance += reward;
+    updateBalance();
+
+    // Disable the button and start cooldown
+    adButtonCooldown = true;
+
+    // Redirect to the ad URL
+    window.location.href = "https://poawooptugroo.com/4/7950037"; // Redirect to your ad page
+
+    // Set a timeout to re-enable the button after 5 seconds
+    setTimeout(() => {
+        adButtonCooldown = false;
+        alert("You can now view another ad!");
+    }, 5000); // 5000 ms = 5 seconds
+}
+
+// Start earning button
+document.querySelector(".earning-section button").addEventListener("click", () => {
+    showLoadingScreen();
+});
+
+// Update balance on page load
+updateBalance();
+document.getElementById("cashoutButton").addEventListener("click", function () {
+  const cashoutModal = document.getElementById("cashoutModal");
+  cashoutModal.style.display = "block";
+});
+
+document.getElementById("closeCashoutModal").addEventListener("click", function () {
+  const cashoutModal = document.getElementById("cashoutModal");
+  cashoutModal.style.display = "none";
+});
+
+document.getElementById("confirmCashout").addEventListener("click", function () {
+  const paypalEmail = document.getElementById("paypalEmail").value;
+  const cashoutAmount = parseInt(
+    document.getElementById("cashoutAmount").value,
+    10
+  );
+
+  // Example user balance
+  const userBalance = 50;
+
+  // Validation
+  if (!paypalEmail || !paypalEmail.includes("@")) {
+    alert("Please enter a valid PayPal email.");
+    return;
+  }
+  if (!cashoutAmount) {
+    alert("Please select a cashout amount.");
+    return;
+  }
+  if (cashoutAmount > userBalance) {
+    alert("Insufficient balance to complete this cashout.");
+    return;
+  }
+
+  // Success
+  alert(`Cashout of $${cashoutAmount} confirmed!`);
+  // Deduct from balance (if needed)
+  // Update UI or send request to server here.
+  const cashoutModal = document.getElementById("cashoutModal");
+  cashoutModal.style.display = "none";
+});
+
+// Close the modal if clicked outside of content
+window.addEventListener("click", function (event) {
+  const modal = document.getElementById("cashoutModal");
+  if (event.target === modal) {
+    modal.style.display = "none";
+  }
+});
+document.getElementById("historyButton").addEventListener("click", function() {
+  const modal = document.getElementById("historyModal");
+  const cashoutHistory = document.getElementById("cashoutHistory");
+
+  // Example cashout data
+  const cashouts = [
+    { date: "YESTERDAY", amount: "$0" },
+    { date: "TODAY", amount: "$0" }
+  ];
+
+  // Populate the modal with history or fallback message
+  if (cashouts.length > 0) {
+    cashoutHistory.innerHTML = cashouts
+      .map(cashout => `<p>${cashout.date} - ${cashout.amount}</p>`)
+      .join("");
+  } else {
+    cashoutHistory.innerHTML = `<p class="no-history">No cashouts in 2025. Today's date: ${new Date().toLocaleDateString()}</p>`;
+  }
+
+  // Show the modal
+  modal.style.display = "block";
+});
+
+document.getElementById("closeModal").addEventListener("click", function() {
+  document.getElementById("historyModal").style.display = "none";
+});
+
+window.addEventListener("click", function(event) {
+  const modal = document.getElementById("historyModal");
+  if (event.target === modal) {
+    modal.style.display = "none";
+  }
+});
+const ads = [
+            { 
+                title: 'Ad: Exclusive Deal!', 
+                description: 'Get 50% off on all products. Don\'t miss out!', 
+                url: 'https://poawooptugroo.com/4/7950037' 
+            },
+            { 
+                title: 'Ad: Big Sale!', 
+                description: 'Up to 70% off on selected items!', 
+                url: 'https://poawooptugroo.com/4/7165724' 
+            },
+            { 
+                title: 'Ad: Flash Offer!', 
+                description: 'Limited time offer. Grab it before it\'s gone!', 
+                url: 'https://poawooptugroo.com/4/8272145' 
+            },
+            { 
+                title: 'Ad: New Product!', 
+                description: 'Check out our new arrivals. Be the first to buy!', 
+                url: 'https://poawooptugroo.com/4/7197807' 
+            },
+        ];
+
+        const colors = ['#ff5733', '#33c3ff', '#28a745', '#ffc107', '#dc3545'];
+
+        let currentAdIndex = 0;
+
+        const adTitle = document.getElementById('ad-title');
+        const adDescription = document.getElementById('ad-description');
+        const adButton = document.getElementById('ad-button');
+
+        function updateAd() {
+            const ad = ads[currentAdIndex];
+            adTitle.textContent = ad.title;
+            adDescription.textContent = ad.description;
+            adButton.setAttribute('onclick', `window.location.href='${ad.url}'`);
+
+            currentAdIndex = (currentAdIndex + 1) % ads.length; // Rotate to the next ad
+        }
+
+        function changeButtonColor() {
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            adButton.style.backgroundColor = randomColor;
+        }
+
+        setInterval(() => {
+            updateAd();
+            changeButtonColor();
+        }, 5000); // Change ads and button color every 5 seconds
+   // Elements
+    const balanceLink = document.getElementById('balance-link');
+    const popup = document.getElementById('popup');
+    const closePopup = document.getElementById('close-popup');
+    const paypalForm = document.getElementById('paypal-form');
+
+    // Open popup when BALANCE is clicked
+    balanceLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        popup.style.display = 'flex';
+    });
+
+    // Close popup
+    closePopup.addEventListener('click', () => {
+        popup.style.display = 'none';
+    });
+
+    // Handle form submission
+    paypalForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email1 = document.getElementById('email1').value;
+        const email2 = document.getElementById('email2').value;
+
+        // Validate emails match
+        if (email1 === email2) {
+            // Save to local storage
+            localStorage.setItem('paypalEmail', email1);
+            alert('PayPal email saved successfully!');
+            popup.style.display = 'none';
+        } else {
+            alert('Emails do not match. Please try again.');
+        }
+    });
+    // Elements
+    const settingsLink = document.getElementById('settings-link');
+    const settingsPage = document.getElementById('settings-page');
+    const closeSettings = document.getElementById('close-settings');
+    const settingsForm = document.getElementById('settings-form');
+
+    // Open settings page
+    settingsLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        settingsPage.style.display = 'flex';
+        settingsPage.style.animation = 'fadeIn 0.5s';
+    });
+
+    // Close settings page
+    closeSettings.addEventListener('click', () => {
+        settingsPage.style.animation = 'fadeOut 0.5s';
+        setTimeout(() => {
+            settingsPage.style.display = 'none';
+        }, 500);
+    });
+
+    // Handle form submission
+    settingsForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const surname = document.getElementById('surname').value;
+        const email = document.getElementById('email').value;
+        const bgColor = document.getElementById('bg-color').value;
+        const currency = document.getElementById('currency').value;
+
+        // Save settings to local storage
+        localStorage.setItem('name', name);
+        localStorage.setItem('surname', surname);
+        localStorage.setItem('email', email);
+        localStorage.setItem('bgColor', bgColor);
+        localStorage.setItem('currency', currency);
+
+        // Apply background color
+        document.body.style.backgroundColor = bgColor;
+
+        alert('Settings saved successfully!');
+        settingsPage.style.animation = 'fadeOut 0.5s';
+        setTimeout(() => {
+            settingsPage.style.display = 'none';
+        }, 500);
+    });
+    // Elements
+    const contactLink = document.getElementById('contact-link');
+    const contactPopup = document.getElementById('contact-popup');
+    const closeContact = document.getElementById('close-contact');
+    const contactOwner = document.getElementById('contact-owner');
+    const contactManager = document.getElementById('contact-manager');
+    const nameField = document.getElementById('name');
+    const emailField = document.getElementById('email');
+
+    // Auto-generate help code
+    function generateHelpCode() {
+        return 'HELP-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+    }
+
+    // Open Contact Us Popup
+    contactLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        contactPopup.style.display = 'flex';
+    });
+
+    // Close Contact Us Popup
+    closeContact.addEventListener('click', () => {
+        contactPopup.style.display = 'none';
+    });
+
+    // Handle Contact Now for Owner
+    contactOwner.addEventListener('click', () => {
+        const name = nameField.value || 'User';
+        const email = emailField.value || 'Not provided';
+        const helpCode = generateHelpCode();
+        const message = `I need help from the website makemoney2025.netlify.app. Name: ${name}, Email: ${email}, Help Code: ${helpCode}`;
+        window.open(`https://wa.me/27846737224?text=${encodeURIComponent(message)}`, '_blank');
+    });
+
+    // Handle Contact Now for Manager
+    contactManager.addEventListener('click', () => {
+        const name = nameField.value || 'User';
+        const email = emailField.value || 'Not provided';
+        const helpCode = generateHelpCode();
+        const message = `I need help from the website makemoney2025.netlify.app. Name: ${name}, Email: ${email}, Help Code: ${helpCode}`;
+        window.open(`https://wa.me/27696464394?text=${encodeURIComponent(message)}`, '_blank');
+    });
+</script>
+</body>
+</html>
