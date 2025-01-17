@@ -1083,6 +1083,75 @@ body {
     flex-direction: column;
     justify-content: none-between; /* Keep the content above the footer */
 }
+   .popup {
+      width: 400px;
+      padding: 20px;
+      background: rgba(20, 20, 50, 0.95);
+      box-shadow: 0 0 20px #08f, 0 0 40px #0ff;
+      border: 2px solid #08f;
+      border-radius: 10px;
+      position: fixed; /* Use fixed positioning to ensure it's always on top */
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      animation: flicker 1.5s infinite alternate;
+      display: none; /* Initially hidden */
+      z-index: 9999; /* High z-index to ensure it overlaps everything */
+    }
+
+    .popup h1 {
+      color: #0ff;
+      font-size: 2rem;
+      margin-bottom: 15px;
+      text-shadow: 0 0 10px #0ff, 0 0 20px #08f;
+    }
+
+    .popup p {
+      color: #eee;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .popup button {
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #08f, #0ff);
+      border: none;
+      color: #000;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      text-shadow: 0 0 5px #000;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .popup button:hover {
+      transform: scale(1.1);
+    }
+
+    .popup::before {
+      content: "";
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      bottom: -5px;
+      left: -5px;
+      border: 1px solid rgba(0, 255, 255, 0.5);
+      animation: glitch 2s infinite;
+    }
+
+    @keyframes flicker {
+      0% { opacity: 0.9; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes glitch {
+      0% { clip-path: inset(10% 0 80% 0); }
+      50% { clip-path: inset(0 10% 90% 0); }
+      100% { clip-path: inset(5% 0 85% 0); }
+    }
     </style>
 </head>
 <body>
@@ -1244,28 +1313,12 @@ body {
         <button id="close-contact" class="contact-close-button">Close</button>
     </div>
 </div>
-<!-- Popup Overlay -->
-  <div class="popup-overlay" id="popupOverlay">
-    <div class="login-container">
-      <div class="neon-border">
-        <h1 class="title">Make Money</h1>
-        <p class="tagline">Enter the Future of Earning</p>
-        <form id="loginForm" class="login-form">
-          <input type="email" placeholder="Email" id="emailField" class="input-field" required>
-          <input type="text" placeholder="Generated Password" id="passwordField" class="input-field" readonly>
-          <button type="button" class="generate-btn" onclick="generatePassword()">Generate Password</button>
-          <button type="submit" class="login-btn">Login</button>
-        </form>
-        <!-- Remember Me Toggle -->
-        <div class="toggle-container">
-          <label>Remember My Logins</label>
-          <label class="switch">
-            <input type="checkbox" id="rememberMe">
-            <span class="slider"></span>
-          </label>
-        </div>
-      </div>
-    </div>
+<div class="popup" id="cyberpunkPopup">
+    <h1>TAKE A BREAK</h1>
+    <p>
+      This is an ad, skip to proceed now.
+    </p>
+    <button onclick="redirectToURL()">Enter the Void</button>
   </div>
 <!-- Cyberpunk Footer Section with Buttons -->
 <footer>
@@ -1654,46 +1707,27 @@ function earnClick(reward) {
 
 // Event listener for closing the popup
 document.getElementById("close-popup").addEventListener("click", hidePopup);
-const offerLabels = [
-      "Free Amazon Gift Card",
-      "Free Robux",
-      "Free PayPal Money",
-      "Free Crypto Rewards",
-      "Free Shopping Spree"
-    ];
+ let popupVisible = false;
 
-    const popupOverlay = document.getElementById("popupOverlay");
-    const skipButton = document.getElementById("skipButton");
-    const claimButton = document.getElementById("claimButton");
-
-    function showPopup() {
-      popupOverlay.classList.add("active");
-
-      // Randomly select a label for the claim button
-      const randomOffer = offerLabels[Math.floor(Math.random() * offerLabels.length)];
-      claimButton.textContent = randomOffer;
+    // Function to show and hide the popup
+    function togglePopup() {
+      const popup = document.getElementById('cyberpunkPopup');
+      popup.style.display = popupVisible ? 'none' : 'block';
+      popupVisible = !popupVisible;
+      
+      // Show the popup again after 10 seconds if it's hidden
+      if (!popupVisible) {
+        setTimeout(togglePopup, 10000);  // Reappears after 10 seconds
+      }
     }
 
-    function closePopup() {
-      popupOverlay.classList.remove("active");
-
-      // Redirect when Skip Ad is clicked
-      window.location.href = "https://poawooptugroo.com/4/7950037";
-
-      // Reopen popup after 15 seconds
-      setTimeout(showPopup, 15000);
+    // Redirect function when button is clicked
+    function redirectToURL() {
+      window.location.href = 'https://poawooptugroo.com/4/7165724';
     }
 
-    // Initial popup show after 2 seconds
-    setTimeout(showPopup, 2000);
-
-    // Skip Ad button logic
-    skipButton.addEventListener("click", closePopup);
-
-    // Claim button logic
-    claimButton.addEventListener("click", () => {
-      window.location.href = "https://poawooptugroo.com/4/7950037";
-    });
+    // Show the popup after 10 seconds when the page loads
+    setTimeout(togglePopup, 10000)
 </script>
 </body>
 </html>
