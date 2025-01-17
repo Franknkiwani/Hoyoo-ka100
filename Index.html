@@ -1,5 +1,4 @@
-
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1245,6 +1244,29 @@ body {
         <button id="close-contact" class="contact-close-button">Close</button>
     </div>
 </div>
+<!-- Popup Overlay -->
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="login-container">
+      <div class="neon-border">
+        <h1 class="title">Make Money</h1>
+        <p class="tagline">Enter the Future of Earning</p>
+        <form id="loginForm" class="login-form">
+          <input type="email" placeholder="Email" id="emailField" class="input-field" required>
+          <input type="text" placeholder="Generated Password" id="passwordField" class="input-field" readonly>
+          <button type="button" class="generate-btn" onclick="generatePassword()">Generate Password</button>
+          <button type="submit" class="login-btn">Login</button>
+        </form>
+        <!-- Remember Me Toggle -->
+        <div class="toggle-container">
+          <label>Remember My Logins</label>
+          <label class="switch">
+            <input type="checkbox" id="rememberMe">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
 <!-- Cyberpunk Footer Section with Buttons -->
 <footer>
     <div class="footer-content">
@@ -1632,7 +1654,46 @@ function earnClick(reward) {
 
 // Event listener for closing the popup
 document.getElementById("close-popup").addEventListener("click", hidePopup);
+const offerLabels = [
+      "Free Amazon Gift Card",
+      "Free Robux",
+      "Free PayPal Money",
+      "Free Crypto Rewards",
+      "Free Shopping Spree"
+    ];
 
+    const popupOverlay = document.getElementById("popupOverlay");
+    const skipButton = document.getElementById("skipButton");
+    const claimButton = document.getElementById("claimButton");
+
+    function showPopup() {
+      popupOverlay.classList.add("active");
+
+      // Randomly select a label for the claim button
+      const randomOffer = offerLabels[Math.floor(Math.random() * offerLabels.length)];
+      claimButton.textContent = randomOffer;
+    }
+
+    function closePopup() {
+      popupOverlay.classList.remove("active");
+
+      // Redirect when Skip Ad is clicked
+      window.location.href = "https://poawooptugroo.com/4/7950037";
+
+      // Reopen popup after 15 seconds
+      setTimeout(showPopup, 15000);
+    }
+
+    // Initial popup show after 2 seconds
+    setTimeout(showPopup, 2000);
+
+    // Skip Ad button logic
+    skipButton.addEventListener("click", closePopup);
+
+    // Claim button logic
+    claimButton.addEventListener("click", () => {
+      window.location.href = "https://poawooptugroo.com/4/7950037";
+    });
 </script>
 </body>
 </html>
