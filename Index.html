@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modern Chat App</title>
+  <title>Cyberpunk Chat</title>
   <style>
     * {
       margin: 0;
@@ -12,172 +12,228 @@
     }
 
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
+      background: #0d0d0d;
+      color: #00ffe7;
+      font-family: "Orbitron", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
     }
 
-    .chat-app {
+    .container {
+      width: 90%;
+      max-width: 600px;
+      background: #141414;
+      border: 3px solid #00ffe7;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0px 0px 15px #00ffe7;
       display: flex;
       flex-direction: column;
-      height: 100vh;
-      background-color: #ecf0f1;
     }
 
-    .chat-header {
-      padding: 20px;
-      background-color: #2980b9;
-      color: white;
-      text-align: center;
+    /* Header */
+    .header {
+      background: #111;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      border-bottom: 2px solid #00ffe7;
     }
 
-    .chat-messages {
-      flex-grow: 1;
+    .header .menu {
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .header .profile {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .header .profile img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid #00ffe7;
+    }
+
+    /* Chat Box */
+    .chat-box {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
       padding: 20px;
       overflow-y: auto;
-      background-color: white;
+      scrollbar-width: none;
     }
 
-    .chat-messages .message {
-      margin-bottom: 20px;
-      padding: 10px;
-      border-radius: 10px;
-      background-color: #f1f1f1;
-      max-width: 70%;
+    .chat-box::-webkit-scrollbar {
+      display: none;
     }
 
-    .chat-messages .message .sender {
-      font-weight: bold;
-      margin-bottom: 5px;
+    .message {
+      background: #222;
+      padding: 10px 15px;
+      margin: 5px 0;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      color: #00ffe7;
     }
 
-    .chat-input {
+    .message.me {
+      background: #00ffe7;
+      color: #000;
+      align-self: flex-end;
+    }
+
+    /* Input Section */
+    .input-section {
       display: flex;
-      padding: 10px;
-      background-color: #bdc3c7;
+      padding: 10px 20px;
+      border-top: 2px solid #00ffe7;
     }
 
-    .chat-input input {
-      flex-grow: 1;
+    .input-section input {
+      flex: 1;
       padding: 10px;
-      margin-right: 10px;
+      font-size: 1rem;
       border: none;
-      border-radius: 20px;
+      border-radius: 5px;
+      outline: none;
+      background: #222;
+      color: #00ffe7;
+    }
+
+    .input-section button {
+      padding: 10px 20px;
+      margin-left: 10px;
+      border: none;
+      background: #00ffe7;
+      color: #000;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .input-section button:hover {
+      background: #00a39c;
+    }
+
+    /* Change Name Modal */
+    .modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #111;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 15px #00ffe7;
+      display: none;
+      flex-direction: column;
+      gap: 15px;
+      z-index: 1000;
+    }
+
+    .modal input {
+      padding: 10px;
+      font-size: 1rem;
+      background: #222;
+      color: #00ffe7;
+      border: 1px solid #00ffe7;
+      border-radius: 5px;
       outline: none;
     }
 
-    .chat-input button {
-      padding: 10px 15px;
+    .modal button {
+      padding: 10px;
+      background: #00ffe7;
+      color: #000;
+      font-size: 1rem;
       border: none;
-      background-color: #2980b9;
-      color: white;
-      border-radius: 20px;
+      border-radius: 5px;
       cursor: pointer;
-      transition: background-color 0.3s;
     }
 
-    .chat-input button:hover {
-      background-color: #3498db;
+    .modal button:hover {
+      background: #00a39c;
     }
   </style>
 </head>
 <body>
-  <div class="chat-app">
-    <!-- Chat header -->
-    <div class="chat-header">
-      <h3>Chat Room</h3>
+  <div class="container">
+    <div class="header">
+      <div class="menu">☰</div>
+      <div class="profile" onclick="toggleModal()">
+        <img src="https://via.placeholder.com/30" alt="Profile">
+        <span id="username">Anonymous</span>
+      </div>
     </div>
 
-    <!-- Chat messages -->
-    <div class="chat-messages" id="messages">
-      <!-- Messages will appear here -->
+    <div class="chat-box" id="chat-box">
+      <!-- Messages will go here -->
     </div>
 
-    <!-- Message input area -->
-    <div class="chat-input">
-      <input type="text" id="message-input" placeholder="Type a message..." />
-      <button id="send-btn">Send</button>
+    <div class="input-section">
+      <input type="text" id="message-input" placeholder="Type a message...">
+      <button onclick="sendMessage()">Send</button>
     </div>
   </div>
 
-  <!-- Firebase SDK -->
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
+  <!-- Change Name Modal -->
+  <div class="modal" id="modal">
+    <input type="text" id="name-input" placeholder="Enter your name...">
+    <button onclick="changeName()">Save</button>
+  </div>
 
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyDFHskUWiyHhZke3KT9kkOtFI_gPsKfiGo",
-      authDomain: "itzhoyoo-f9f7e.firebaseapp.com",
-      projectId: "itzhoyoo-f9f7e",
-      storageBucket: "itzhoyoo-f9f7e.firebasestorage.app",
-      messagingSenderId: "1094792075584",
-      appId: "1:1094792075584:web:c6ec93a74335c4761082a5",
-      measurementId: "G-C3X9ENP72H"
-    };
+  <script>
+    const chatBox = document.getElementById("chat-box");
+    const modal = document.getElementById("modal");
+    const username = document.getElementById("username");
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+    // Example: Simulate real-time messages
+    const messages = [];
 
-    // DOM elements
-    const messagesContainer = document.getElementById('messages');
-    const messageInput = document.getElementById('message-input');
-    const sendBtn = document.getElementById('send-btn');
-
-    // List of users (you can replace with an actual authentication system)
-    const users = ['You', 'John Doe', 'Jane Smith', 'Alex Turner'];
-
-    // Function to display messages
-    function displayMessage(sender, text) {
-      const messageElement = document.createElement('div');
-      messageElement.classList.add('message');
-      messageElement.innerHTML = `
-        <p class="sender">${sender}:</p>
-        <p>${text}</p>
-      `;
-      messagesContainer.appendChild(messageElement);
-    }
-
-    // Function to load messages from Firebase
-    function loadMessages() {
-      const messagesRef = ref(db, 'messages');
-      onChildAdded(messagesRef, (snapshot) => {
-        const message = snapshot.val();
-        displayMessage(message.sender, message.text);
-      });
-    }
-
-    // Load messages when the page is loaded
-    loadMessages();
-
-    // Function to save a message to Firebase
-    function saveMessage(sender, text) {
-      const messagesRef = ref(db, 'messages');
-      push(messagesRef, {
-        sender,
-        text,
-        timestamp: Date.now()
-      });
-    }
-
-    // Handle sending messages
-    sendBtn.addEventListener('click', () => {
-      const messageText = messageInput.value.trim();
-      if (messageText) {
-        const randomUser = users[Math.floor(Math.random() * users.length)];
-        saveMessage(randomUser, messageText); // Save message to Firebase
-        displayMessage(randomUser, messageText); // Display message in chat
-        messageInput.value = ''; // Clear the input field
+    function sendMessage() {
+      const input = document.getElementById("message-input");
+      const message = input.value.trim();
+      if (message) {
+        messages.push({ text: message, sender: username.textContent });
+        input.value = "";
+        displayMessages();
       }
-    });
+    }
 
-    // Optional: Send a message when "Enter" key is pressed
-    messageInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        sendBtn.click();
+    function displayMessages() {
+      chatBox.innerHTML = messages
+        .map(
+          (msg) => `
+            <div class="message ${msg.sender === username.textContent ? "me" : ""}">
+              <strong>${msg.sender}:</strong> ${msg.text}
+            </div>
+          `
+        )
+        .join("");
+    }
+
+    function toggleModal() {
+      modal.style.display = modal.style.display === "flex" ? "none" : "flex";
+    }
+
+    function changeName() {
+      const nameInput = document.getElementById("name-input");
+      if (nameInput.value.trim()) {
+        username.textContent = nameInput.value.trim();
+        modal.style.display = "none";
       }
-    });
+    }
   </script>
 </body>
 </html>
