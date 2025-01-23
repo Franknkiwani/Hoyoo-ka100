@@ -1,183 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HOYOO VIBES😅</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYSTRO App</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-    }
+        /* General Styles */
+        body {
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            color: #fff;
+        }
 
-    .chat-app {
-      display: flex;
-      flex-direction: column;
-      height: 90vh;
-      background-color: #ecf0f1;
-    }
+        header {
+            background-color: #000;
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.8),
+                        0 0 50px rgba(0, 255, 255, 0.6);
+            border-bottom: 2px solid rgba(0, 255, 255, 0.6);
+        }
 
-    .chat-header {
-      padding: 20px;
-      background-color: #2980b9;
-      color: white;
-      text-align: center;
-    }
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, #00ffff, #00ff99, #00ffff);
+            filter: blur(10px);
+            z-index: -1;
+        }
 
-    .chat-messages {
-      flex-grow: 1;
-      padding: 20px;
-      overflow-y: auto;
-      background-color: white;
-    }
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7_FgBdhbd9NpxcWlda5-q91hIM2SY8cDVDkSqAFohHAp3OoTnwKaj2ZNz&s=10');
+            background-size: cover;
+            background-position: center;
+            border: 3px solid rgba(0, 255, 0, 0.8);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.8),
+                        0 0 20px rgba(0, 255, 0, 0.6);
+        }
 
-    .chat-messages .message {
-      margin-bottom: 20px;
-      padding: 10px;
-      border-radius: 10px;
-      background-color: #f1f1f1;
-      max-width: 70%;
-    }
+        /* Chat Section */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            gap: 15px;
+            height: calc(100vh - 140px); /* Adjust height to fit screen */
+        }
 
-    .chat-messages .message .sender {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
+        .message {
+            display: flex;
+            align-items: flex-start;
+            max-width: 70%;
+        }
 
-    .chat-input {
-      display: flex;
-      padding: 10px;
-      background-color: #bdc3c7;
-    }
+        .message.sent {
+            justify-content: flex-start;
+        }
 
-    .chat-input input {
-      flex-grow: 1;
-      padding: 10px;
-      margin-right: 10px;
-      border: none;
-      border-radius: 20px;
-      outline: none;
-    }
+        .message.received {
+            justify-content: flex-end;
+        }
 
-    .chat-input button {
-      padding: 10px 15px;
-      border: none;
-      background-color: #2980b9;
-      color: white;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
+        .message .profile-pic {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
 
-    .chat-input button:hover {
-      background-color: #3498db;
-    }
-  </style>
+        .message .message-body {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 14px;
+            max-width: 70%;
+            word-wrap: break-word;
+            box-shadow: 0 4px 10px rgba(0, 255, 255, 0.6);
+        }
+
+        .message .time {
+            font-size: 10px;
+            color: #bbb;
+            margin-left: 10px;
+        }
+
+        .message .user-name {
+            font-weight: bold;
+            color: #00ffff;
+            margin-bottom: 5px;
+        }
+
+        /* Message Input */
+        .message-input-container {
+            display: flex;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-top: 1px solid rgba(0, 255, 255, 0.6);
+        }
+
+        .message-input-container input, .message-input-container button {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .message-input-container input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .message-input-container button {
+            background: rgba(0, 255, 255, 0.8);
+            color: #000;
+            cursor: pointer;
+        }
+
+        .message-input-container button:hover {
+            background: rgba(0, 255, 255, 1);
+        }
+
+        /* Name Prompt Popup */
+        .name-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .name-popup .popup-content {
+            background-color: #222;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .name-popup input {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .name-popup button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            background: rgba(0, 255, 255, 0.8);
+            color: #000;
+            border: none;
+            cursor: pointer;
+        }
+
+        .name-popup button:hover {
+            background: rgba(0, 255, 255, 1);
+        }
+    </style>
 </head>
 <body>
-  <div class="chat-app">
-    <!-- Chat header -->
-    <div class="chat-header">
-      <h3>HOYOO CHAT</h3>
+    <header>
+        <div class="profile-icon" id="profileIcon"></div>
+    </header>
+
+    <!-- Chat Section -->
+    <div class="chat-container" id="chatContainer">
+        <!-- Messages will be displayed here -->
     </div>
 
-    <!-- Chat messages -->
-    <div class="chat-messages" id="messages">
-      <!-- Messages will appear here -->
+    <!-- Input Section -->
+    <div class="message-input-container">
+        <input type="text" id="messageInput" placeholder="Type a message">
+        <button onclick="sendMessage()">Send</button>
     </div>
 
-    <!-- Message input area -->
-    <div class="chat-input">
-      <input type="text" id="message-input" placeholder="Type a message..." />
-      <button id="send-btn">Send</button>
+    <!-- Name Input Popup -->
+    <div class="name-popup" id="namePopup">
+        <div class="popup-content">
+            <input type="text" id="userName" placeholder="Enter your name" />
+            <button onclick="saveUserName()">Submit</button>
+        </div>
     </div>
-  </div>
 
-  <!-- Firebase SDK -->
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
+    <script>
+        // Get elements
+        const namePopup = document.getElementById('namePopup');
+        const userNameInput = document.getElementById('userName');
+        const chatContainer = document.getElementById('chatContainer');
+        const messageInput = document.getElementById('messageInput');
+        const profileIcon = document.getElementById('profileIcon');
 
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyDFHskUWiyHhZke3KT9kkOtFI_gPsKfiGo",
-      authDomain: "itzhoyoo-f9f7e.firebaseapp.com",
-      projectId: "itzhoyoo-f9f7e",
-      storageBucket: "itzhoyoo-f9f7e.firebasestorage.app",
-      messagingSenderId: "1094792075584",
-      appId: "1:1094792075584:web:c6ec93a74335c4761082a5",
-      measurementId: "G-C3X9ENP72H"
-    };
+        // Check if username is already stored in localStorage
+        const savedUserName = localStorage.getItem('userName');
+        const savedProfilePic = localStorage.getItem('profilePic');
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+        // If username is stored, skip the popup and set profile picture
+        if (savedUserName) {
+            document.getElementById('profileIcon').style.backgroundImage = savedProfilePic;
+            hideNamePopup();
+        } else {
+            showNamePopup();
+        }
 
-    // DOM elements
-    const messagesContainer = document.getElementById('messages');
-    const messageInput = document.getElementById('message-input');
-    const sendBtn = document.getElementById('send-btn');
+        // Show the name input popup
+        function showNamePopup() {
+            namePopup.style.display = 'flex';
+        }
 
-    // List of users (you can replace with an actual authentication system)
-    const users = ['You', 'John Doe', 'Jane Smith', 'Alex Turner'];
+        // Hide the name input popup
+        function hideNamePopup() {
+            namePopup.style.display = 'none';
+        }
 
-    // Function to display messages
-    function displayMessage(sender, text) {
-      const messageElement = document.createElement('div');
-      messageElement.classList.add('message');
-      messageElement.innerHTML = `
-        <p class="sender">${sender}:</p>
-        <p>${text}</p>
-      `;
-      messagesContainer.appendChild(messageElement);
-    }
+        // Save user name and profile picture to localStorage
+        function saveUserName() {
+            const userName = userNameInput.value.trim();
+            if (userName) {
+                localStorage.setItem('userName', userName);
+                localStorage.setItem('profilePic', "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7_FgBdhbd9NpxcWlda5-q91hIM2SY8cDVDkSqAFohHAp3OoTnwKaj2ZNz&s=10')");
+                document.getElementById('profileIcon').style.backgroundImage = "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7_FgBdhbd9NpxcWlda5-q91hIM2SY8cDVDkSqAFohHAp3OoTnwKaj2ZNz&s=10')";
+                hideNamePopup();
+            }
+        }
 
-    // Function to load messages from Firebase
-    function loadMessages() {
-      const messagesRef = ref(db, 'messages');
-      onChildAdded(messagesRef, (snapshot) => {
-        const message = snapshot.val();
-        displayMessage(message.sender, message.text);
-      });
-    }
+        // Send message function
+        function sendMessage() {
+            const messageText = messageInput.value.trim();
+            if (messageText) {
+                const messageContainer = document.createElement('div');
+                const messageBody = document.createElement('div');
+                const time = document.createElement('div');
+                const userNameElement = document.createElement('div');
+                const profilePic = document.createElement('div');
 
-    // Load messages when the page is loaded
-    loadMessages();
+                // Set message class
+                messageContainer.classList.add('message', 'sent');
+                messageBody.classList.add('message-body');
+                profilePic.classList.add('profile-pic');
+                userNameElement.classList.add('user-name');
+                time.classList.add('time');
 
-    // Function to save a message to Firebase
-    function saveMessage(sender, text) {
-      const messagesRef = ref(db, 'messages');
-      push(messagesRef, {
-        sender,
-        text,
-        timestamp: Date.now()
-      });
-    }
+                // Set content
+                const currentTime = new Date();
+                messageBody.textContent = messageText;
+                userNameElement.textContent = localStorage.getItem('userName');
+                profilePic.style.backgroundImage = localStorage.getItem('profilePic');
+                time.textContent = `${currentTime.getHours()}:${currentTime.getMinutes()}`;
 
-    // Handle sending messages
-    sendBtn.addEventListener('click', () => {
-      const messageText = messageInput.value.trim();
-      if (messageText) {
-        const randomUser = users[Math.floor(Math.random() * users.length)];
-        saveMessage(randomUser, messageText); // Save message to Firebase
-        displayMessage(randomUser, messageText); // Display message in chat
-        messageInput.value = ''; // Clear the input field
-      }
-    });
+                // Append message to chat container
+                messageBody.prepend(userNameElement); // Add name before the message
+                messageContainer.appendChild(profilePic);
+                messageContainer.appendChild(messageBody);
+                messageContainer.appendChild(time);
+                chatContainer.appendChild(messageContainer);
 
-    // Optional: Send a message when "Enter" key is pressed
-    messageInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        sendBtn.click();
-      }
-    });
-  </script>
+                // Clear message input
+                messageInput.value = '';
+
+                // Scroll to the bottom
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        }
+    </script>
 </body>
 </html>
