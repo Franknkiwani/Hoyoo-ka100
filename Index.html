@@ -5,33 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CyberChat</title>
     <script type="module">
+        // Firebase SDK Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
         import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js";
 
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDFHskUWiyHhZke3KT9kkOtFI_gPsKfiGo",
             authDomain: "itzhoyoo-f9f7e.firebaseapp.com",
             projectId: "itzhoyoo-f9f7e",
-            storageBucket: "itzhoyoo-f9f7e.firebasestorage.app",
+            storageBucket: "itzhoyoo-f9f7e.appspot.com",
             messagingSenderId: "1094792075584",
             appId: "1:1094792075584:web:c6ec93a74335c4761082a5",
             measurementId: "G-C3X9ENP72H"
         };
 
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        const storage = getStorage(app);
 
+        // DOM Elements
         const messagesContainer = document.getElementById('messages');
         const messageInput = document.getElementById('message-input');
+        const imageInput = document.getElementById('image-input');
         const sendBtn = document.getElementById('send-btn');
+        const imageBtn = document.getElementById('image-btn');
 
-        function displayMessage(sender, text, time) {
+        // Display a message (text or image)
+        function displayMessage(sender, text, time, imageUrl = null) {
             const messageElement = document.createElement('div');
             messageElement.classList.add('message', 'received');
             messageElement.innerHTML = `
                 <div class="profile-pic"></div>
                 <div class="message-content">
-                    <p>${text}</p>
+                    <p>${text || ''}</p>
+                    ${imageUrl ? `<img src="${imageUrl}" alt="Image" style="max-width: 100%; border-radius: 10px; margin-top: 10px;">` : ''}
                     <div class="message-info">${sender} · ${time}</div>
                 </div>
             `;
@@ -39,46 +49,81 @@
             scrollMessages();
         }
 
+        // Load messages from Firebase
         function loadMessages() {
             const messagesRef = ref(db, 'messages');
             onChildAdded(messagesRef, (snapshot) => {
                 const message = snapshot.val();
                 const time = new Date(message.timestamp).toLocaleTimeString();
-                displayMessage(message.sender, message.text, time);
+                displayMessage(message.sender, message.text, time, message.imageUrl);
             });
         }
 
-        loadMessages();
-
-        function saveMessage(sender, text) {
+        // Save a message to Firebase
+        function saveMessage(sender, text = "", imageUrl = null) {
             const messagesRef = ref(db, 'messages');
             push(messagesRef, {
                 sender,
                 text,
+                imageUrl,
                 timestamp: Date.now()
             });
         }
 
+        // Upload an image to Firebase Storage
+        function uploadImage(file) {
+            return new Promise((resolve, reject) => {
+                const fileRef = storageRef(storage, `images/${Date.now()}_${file.name}`);
+                uploadBytes(fileRef, file)
+                    .then((snapshot) => getDownloadURL(snapshot.ref))
+                    .then((url) => resolve(url))
+                    .catch((error) => reject(error));
+            });
+        }
+
+        // Handle image button click
+        imageBtn.addEventListener('click', () => {
+            imageInput.click(); // Open file picker
+        });
+
+        // Handle image upload
+        imageInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                try {
+                    const imageUrl = await uploadImage(file);
+                    saveMessage("You", "", imageUrl); // Save image URL to Firebase
+                } catch (error) {
+                    console.error("Image upload failed:", error);
+                }
+            }
+        });
+
+        // Handle sending text messages
         sendBtn.addEventListener('click', () => {
             const messageText = messageInput.value.trim();
             if (messageText) {
-                const sender = "You";
-                saveMessage(sender, messageText);
+                saveMessage("You", messageText);
                 const time = new Date().toLocaleTimeString();
-                displayMessage(sender, messageText, time);
+                displayMessage("You", messageText, time);
                 messageInput.value = '';
             }
         });
 
+        // Send message on "Enter" key press
         messageInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 sendBtn.click();
             }
         });
 
+        // Auto-scroll messages container
         function scrollMessages() {
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
+
+        // Load messages on page load
+        loadMessages();
     </script>
     <style>
         * {
@@ -104,8 +149,6 @@
 
         .chat-header, .chat-footer {
             position: sticky;
-            top: 0; /* Header */
-            bottom: 0; /* Footer */
             background: linear-gradient(90deg, #ff0080, #8e2de2);
             padding: 10px 20px;
             display: flex;
@@ -114,10 +157,14 @@
             z-index: 1000;
         }
 
-        .chat-header h1, .chat-footer h1 {
-            font-size: 1rem;
-            color: black;
-            text-shadow: 0 0 5px #ff0080, 0 0 10px #ff0080, 0 0 20px #ff0080, 0 0 40px #8e2de2, 0 0 80px #8e2de2;
+        .chat-header {
+            top: 0;
+        }
+
+        .chat-footer {
+            bottom: 0;
+            flex-direction: column;
+            gap: 5px;
         }
 
         .profile-pic {
@@ -164,25 +211,25 @@
             color: #aaa;
         }
 
-        .input-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.8);
-        }
-
         #message-input {
-            flex-grow: 1;
+            width: 100%;
             padding: 10px;
             border: 2px solid #00ffff;
             border-radius: 25px;
             background: rgba(0, 0, 0, 0.7);
             color: #fff;
-            margin-right: 10px;
         }
 
-        .send-btn {
+        #image-btn {
+            background-color: #ff0080;
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #send-btn {
             background-color: #ff0080;
             border: none;
             color: white;
@@ -199,13 +246,15 @@
             <div class="profile-pic"></div>
         </div>
         <div class="messages" id="messages">
-            <!-- Messages will be dynamically added here -->
+            <!-- Messages will appear here -->
+        </div>
+        <div class="input-area">
+            <textarea id="message-input" placeholder="Type a message..." rows="1"></textarea>
         </div>
         <div class="chat-footer">
-            <div class="input-area">
-                <textarea id="message-input" placeholder="Type a message..." rows="1"></textarea>
-                <button id="send-btn" class="send-btn">Send</button>
-            </div>
+            <input type="file" id="image-input" accept="image/*" style="display: none;">
+            <button id="image-btn">📷</button>
+            <button id="send-btn">Send</button>
         </div>
     </div>
 </body>
