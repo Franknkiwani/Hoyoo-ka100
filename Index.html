@@ -1,365 +1,509 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Cyberpunk Group Chat</title>
-  <style>
-    /* General Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="webkit">
+    <title>Empty App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #0d0d0d;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
-    }
+        body {
+            height: 100vh;
+            background: linear-gradient(135deg, #ff00d4, #00eaff);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            animation: neonPulse 1.5s infinite alternate;
+        }
 
-    .chat-app {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
+        header {
+            width: 100%;
+            height: 50px;
+            background-color: #000;
+            position: sticky;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding-left: 20px;
+            z-index: 10;
+            position: relative;
+        }
 
-    .chat-header {
-      background: linear-gradient(90deg, #ff00c3, #00d4ff);
-      color: #fff;
-      text-align: center;
-      padding: 20px;
-      font-size: 24px;
-      font-weight: bold;
-      text-transform: uppercase;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-      position: sticky;
-      top: 0;
-      z-index: 10; /* Ensures it's on top */
-    }
+        .hamburger {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            position: absolute;
+            right: 20px;
+            cursor: pointer;
+        }
 
-    .chat-header .user-info {
-      position: absolute;
-      bottom: -25px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      background: rgba(0, 0, 0, 0.8);
-      border: 1px solid #ff00c3;
-      border-radius: 20px;
-      padding: 5px 15px;
-      gap: 10px;
-      font-size: 14px;
-    }
+        .hamburger div {
+            width: 100%;
+            height: 4px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
 
-    .chat-header .user-info input {
-      background: none;
-      border: none;
-      color: #fff;
-      outline: none;
-      font-size: 14px;
-      width: auto;
-    }
+        .menu {
+            width: 100%;
+            background-color: #222;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #fff;
+        }
 
-    .chat-header .user-info .edit-icon {
-      cursor: pointer;
-      color: #ff00c3;
-      font-size: 16px;
-    }
+        .menu a {
+            color: #ff00d4;
+            text-decoration: none;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+        }
 
-    .chat-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 10px;
-      overflow: hidden;
-      margin-top: 30px; /* To accommodate user-info under the header */
-    }
+        .menu a:hover {
+            background-color: #00eaff;
+            color: #222;
+        }
 
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px;
-      scrollbar-width: thin;
-      scrollbar-color: #ff00c3 #0d0d0d;
-    }
+        /* Hidden content by default */
+        .page-content {
+            display: none;
+            padding: 20px;
+        }
 
-    .messages::-webkit-scrollbar {
-      width: 8px;
-    }
+        #marketplace {
+            display: none; /* Hide by default */
+        }
 
-    .messages::-webkit-scrollbar-thumb {
-      background: #ff00c3;
-      border-radius: 10px;
-    }
+        main {
+            flex: 1;
+            padding-top: 60px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 80px;
+        }
 
-    .messages::-webkit-scrollbar-track {
-      background: #0d0d0d;
-    }
+        .message {
+            display: flex;
+            align-items: center;
+            background-color: #222;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 20px;
+            max-width: 80%;
+            align-self: flex-start;
+            opacity: 0;
+            animation: glideIn 1s forwards;
+        }
 
-    .message {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      margin: 15px 0;
-      padding: 10px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-    }
+        .message .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background-color: #555;
+            background-size: cover;
+            background-position: center;
+        }
 
-    .message img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-    }
+        .message .content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-    .message-content {
-      display: flex;
-      flex-direction: column;
-    }
+        .message .content .username {
+            font-size: 14px;
+            font-weight: bold;
+            color: #ff00d4;
+        }
 
-    .message-content .user-info {
-      font-size: 12px;
-      color: #ff00c3;
-      margin-bottom: 5px;
-    }
+        .message .content .time {
+            font-size: 12px;
+            color: #aaa;
+        }
 
-    .message-content .text {
-      font-size: 16px;
-      color: #e6e6e6;
-    }
+        footer {
+            width: 100%;
+            height: 60px;
+            background-color: #000;
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            z-index: 10;
+        }
 
-    .message-content .timestamp {
-      font-size: 12px;
-      color: #aaa;
-      margin-top: 5px;
-    }
+        footer input {
+            width: 80%;
+            height: 40px;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            background-color: #222;
+            color: #fff;
+            font-size: 16px;
+            margin-right: 10px;
+            outline: none;
+        }
 
-    .message-form {
-      display: flex;
-      gap: 10px;
-      padding: 15px;
-      background: #0d0d0d;
-      border-top: 2px solid #ff00c3;
-      position: sticky;
-      bottom: 0;
-      z-index: 10; /* Ensures it's on top */
-    }
+        footer button {
+            width: 15%;
+            height: 40px;
+            border: none;
+            border-radius: 20px;
+            background-color: #ff00d4;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-    .message-input {
-      flex: 1;
-      padding: 15px;
-      font-size: 16px;
-      border: 2px solid #ff00c3;
-      border-radius: 10px;
-      background: #0d0d0d;
-      color: #fff;
-      outline: none;
-    }
+        footer button:hover {
+            background-color: #00eaff;
+        }
 
-    .send-button {
-      background: #ff00c3;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.3s ease;
-    }
+        #marketplaceFooter {
+            display: none;
+            width: 100%;
+            height: 60px;
+            background-color: #000;
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 20px;
+            z-index: 10;
+        }
 
-    .send-button:hover {
-      background: #d100a8;
-    }
-  </style>
+        #marketplaceFooter button {
+            width: 30%;
+            height: 40px;
+            border: none;
+            border-radius: 20px;
+            background-color: #ff00d4;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #marketplaceFooter button:hover {
+            background-color: #00eaff;
+        }
+
+        @keyframes neonPulse {
+            0% {
+                text-shadow: 0 0 5px #ff00d4, 0 0 10px #ff00d4, 0 0 15px #00eaff, 0 0 20px #00eaff;
+            }
+            100% {
+                text-shadow: 0 0 10px #ff00d4, 0 0 20px #ff00d4, 0 0 30px #00eaff, 0 0 40px #00eaff;
+            }
+        }
+
+        @keyframes glideIn {
+            0% {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        #marketplace {
+    display: block;
+    /* Show marketplace by default */
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    background-color: #222;
+    padding: 10px;
+    color: #fff;
+    z-index: 10; /* Keeps the header on top of other elements */
+}
+
+.products-container {
+    height: calc(100vh - 60px); /* Adjust based on your header height */
+    overflow-y: auto; /* Makes the product grid scrollable */
+    padding: 10px;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.product {
+    background-color: #222;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.8);
+}
+
+.product img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.product h3 {
+    font-size: 18px;
+    color: #ff00d4;
+    margin-bottom: 10px;
+}
+
+.product .price {
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.product button {
+    background-color: #ff00d4;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.product button:hover {
+    background-color: #00eaff;
+}
+
+
+    </style>
 </head>
 <body>
-  <div class="chat-app">
-    <header class="chat-header">
-      Cyberpunk Chat <span>💾</span>
-      <div class="user-info">
-        <input type="text" id="displayName" value="User123" readonly>
-        <span class="edit-icon" id="editName">✏️</span>
-      </div>
-    </header>
-    <main class="chat-container">
-      <div class="messages" id="messages">
-        <!-- Messages will appear here -->
-      </div>
-      <form class="message-form" id="messageForm">
-        <input type="text" class="message-input" id="messageInput" placeholder="Type your message..." required>
-        <button type="submit" class="send-button">Send</button>
-      </form>
-    </main>
-  </div>
-
-  <script>
-    // Set up localStorage for user ID and name
-    const userId = localStorage.getItem('userId') || `user-${Math.floor(Math.random() * 100000)}`;
-    const userName = localStorage.getItem('userName') || userId;
-    localStorage.setItem('userId', userId);
-
-    const displayNameInput = document.getElementById('displayName');
-    const editNameIcon = document.getElementById('editName');
-    const messageForm = document.getElementById('messageForm');
-    const messageInput = document.getElementById('messageInput');
-    const messages = document.getElementById('messages');
-
-    // Load user's name into input
-    displayNameInput.value = userName;
-
-    // Enable editing the name
-    editNameIcon.addEventListener('click', () => {
-      displayNameInput.removeAttribute('readonly');
-      displayNameInput.focus();
-    });
-
-    // Save the updated name
-    displayNameInput.addEventListener('blur', () => {
-      const updatedName = displayNameInput.value.trim();
-      if (updatedName) {
-        localStorage.setItem('userName', updatedName);
-      } else {
-        displayNameInput.value = userName; // Revert if empty
-      }
-      displayNameInput.setAttribute('readonly', true);
-    });
-
-    messageForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const messageText = messageInput.value;
-      const userName = localStorage.getItem('userName') || userId;
-
-      if (messageText.trim() !== '') {
-        // Add user's message
-        addMessage(messageText, userName, `https://picsum.photos/seed/${userId}/40`, 'sent');
-      }
-
-      messageInput.value = '';
-    });
-
-    function addMessage(text, name, pic, type) {
-      const messageElement = document.createElement('div');
-      messageElement.classList.add('message', type);
-
-      const timestamp = new Date().toLocaleTimeString();
-
-      messageElement.innerHTML = `
-        <img src="${pic}" alt="User Icon">
-        <div class="message-content">
-          <div class="user-info">${name}</div>
-          <div class="text">${text}</div>
-          <div class="timestamp">${timestamp}</div>
+    <header>Cyberchat
+        <div class="hamburger">
+            <div></div>
+            <div></div>
+            <div></div>
         </div>
-      `;
+    </header>
 
-      messages.appendChild(messageElement);
+    <div class="menu">
+        <a href="#" id="homeLink">Home</a>
+        <a href="#" id="marketplaceLink">Marketplace</a>
+        <a href="#" id="mySpaceLink">My Space</a>
+    </div>
 
-      // Scroll to the bottom
-      messages.scrollTop = messages.scrollHeight;
-    }
-  </script>
-  
-  <!-- Firebase SDK -->
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
+    <div class="page-content" id="homeContent">
+        <!-- Home page content -->
+        <h1>Welcome to the Main Page!</h1>
+        <!-- Messages will show up here only when Home page is active -->
+        <div id="messagesArea"></div>
+    </div>
 
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyDFHskUWiyHhZke3KT9kkOtFI_gPsKfiGo",
-      authDomain: "itzhoyoo-f9f7e.firebaseapp.com",
-      projectId: "itzhoyoo-f9f7e",
-      storageBucket: "itzhoyoo-f9f7e.firebasestorage.app",
-      messagingSenderId: "1094792075584",
-      appId: "1:1094792075584:web:c6ec93a74335c4761082a5",
-      measurementId: "G-C3X9ENP72H"
-    };
+     <div class="page-content" id="marketplace">
+        <!-- Marketplace content -->
+        <h1>Marketplace</h1>
+        <div class="products-grid">
+            <!-- Product 1 -->
+            <div class="product">
+                <img src="https://picsum.photos/200/300?random=1" alt="Product Image">
+                <h3>Product 1</h3>
+                <p class="price">$19.99</p>
+                <button>Buy</button>
+            </div>
+            <!-- Product 2 -->
+            <div class="product">
+                <img src="https://picsum.photos/200/300?random=2" alt="Product Image">
+                <h3>Product 2</h3>
+                <p class="price">$29.99</p>
+                <button>Buy</button>
+            </div>
+            <!-- Product 3 -->
+            <div class="product">
+                <img src="https://picsum.photos/200/300?random=3" alt="Product Image">
+                <h3>Product 3</h3>
+                <p class="price">$39.99</p>
+                <button>Buy</button>
+            </div>
+            <!-- Product 4 -->
+            <div class="product">
+                <img src="https://picsum.photos/200/300?random=4" alt="Product Image">
+                <h3>Product 4</h3>
+                <p class="price">$49.99</p>
+                <button>Buy</button>
+            </div>
+        </div>
+    </div>
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+    <div class="page-content" id="mySpaceContent">
+        <!-- My Space content -->
+        <h1>My Space</h1>
+        <p>This is your personal space.</p>
+    </div>
 
-    // DOM elements
-    const messagesContainer = document.getElementById('messages');
-    const messageInput = document.getElementById('message-input');
-    const sendBtn = document.getElementById('send-btn');
+    <main id="chatArea">
+        <!-- Messages will appear here on the Home page only -->
+    </main>
 
-    // List of users (you can replace with an actual authentication system)
-    const users = ['You', 'John Doe', 'Jane Smith', 'Alex Turner'];
+    <footer id="homeFooter">
+        <!-- Home Footer with Message Input -->
+        <input id="messageInput" type="text" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+    </footer>
 
-    // Function to display messages
-    function displayMessage(sender, text, timestamp) {
-      const messageElement = document.createElement('div');
-      messageElement.classList.add('message');
-      
-      const formattedTime = formatTimestamp(timestamp);
+    <footer id="marketplaceFooter">
+        <!-- Marketplace Footer with buttons -->
+        <button>SELL</button>
+        <button>MY ORDER</button>
+        <button>CONTACT US</button>
+    </footer>
 
-      messageElement.innerHTML = `
-        <p class="sender">${sender}</p>
-        <p class="text">${text}</p>
-        <p class="timestamp">${formattedTime}</p>
-      `;
-      messagesContainer.appendChild(messageElement);
-    }
+    <script>
+        // Function to hide all pages
+        function hideAllPages() {
+            document.getElementById("homeContent").style.display = "none";
+            document.getElementById("marketplace").style.display = "none";
+            document.getElementById("mySpaceContent").style.display = "none";
+        }
 
-    // Format timestamp into a readable format
-    function formatTimestamp(timestamp) {
-      const date = new Date(timestamp);
-      const hours = date.getHours();
-      const minutes = date.getMinutes();
-      const seconds = date.getSeconds();
+        // Show the selected page
+        function showPage(pageId) {
+            hideAllPages();
+            document.getElementById(pageId).style.display = "block";
+            toggleFooter(pageId);
+            clearMessagesOnNonHomePages(pageId);
+        }
 
-      return `${hours}:${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-    }
+        // Function to toggle footers based on the active page
+        function toggleFooter(pageId) {
+            if (pageId === "homeContent") {
+                document.getElementById("homeFooter").style.display = "flex";
+                document.getElementById("marketplaceFooter").style.display = "none";
+            } else if (pageId === "marketplace") {
+                document.getElementById("homeFooter").style.display = "none";
+                document.getElementById("marketplaceFooter").style.display = "flex";
+            } else {
+                document.getElementById("homeFooter").style.display = "none";
+                document.getElementById("marketplaceFooter").style.display = "none";
+            }
+        }
 
-    // Function to load messages from Firebase
-    function loadMessages() {
-      const messagesRef = ref(db, 'messages');
-      onChildAdded(messagesRef, (snapshot) => {
-        const message = snapshot.val();
-        displayMessage(message.sender, message.text, message.timestamp);
-      });
-    }
+        // Function to clear messages when not on Home page
+        function clearMessagesOnNonHomePages(pageId) {
+            if (pageId !== "homeContent") {
+                document.getElementById("messagesArea").innerHTML = ''; // Clear messages
+            }
+        }
 
-    // Load messages when the page is loaded
-    loadMessages();
+        // Event listeners for menu links
+        document.getElementById("homeLink").addEventListener("click", function() {
+            showPage("homeContent");
+        });
 
-    // Function to save a message to Firebase
-    function saveMessage(sender, text) {
-      const messagesRef = ref(db, 'messages');
-      push(messagesRef, {
-        sender,
-        text,
-        timestamp: Date.now()
-      });
-    }
+        document.getElementById("marketplaceLink").addEventListener("click", function() {
+            showPage("marketplace");
+        });
 
-    // Handle sending messages
-    sendBtn.addEventListener('click', () => {
-      const messageText = messageInput.value.trim();
-      if (messageText) {
-        const randomUser = users[Math.floor(Math.random() * users.length)];
-        saveMessage(randomUser, messageText); // Save message to Firebase
-        displayMessage(randomUser, messageText, Date.now()); // Display message in chat
-        messageInput.value = ''; // Clear the input field
-      }
-    });
+        document.getElementById("mySpaceLink").addEventListener("click", function() {
+            showPage("mySpaceContent");
+        });
 
-    // Optional: Send a message when "Enter" key is pressed
-    messageInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        sendBtn.click();
-      }
-    });
-  </script>
+        // Default page to show on load
+        showPage("homeContent");
+
+        // Get or generate a random profile pic and store it in localStorage
+        function getProfilePic() {
+            let profilePicUrl = localStorage.getItem("profilePicUrl");
+
+            if (!profilePicUrl) {
+                profilePicUrl = `https://picsum.photos/seed/${Math.random()}/200`;
+                localStorage.setItem("profilePicUrl", profilePicUrl);
+            }
+
+            return profilePicUrl;
+        }
+
+        // Send message function
+        function sendMessage() {
+            const messageInput = document.getElementById("messageInput");
+            const messageText = messageInput.value.trim();
+
+            if (messageText !== "") {
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("message");
+
+                const profilePic = document.createElement("div");
+                profilePic.classList.add("profile-pic");
+                profilePic.style.backgroundImage = `url(${getProfilePic()})`;
+
+                const content = document.createElement("div");
+                content.classList.add("content");
+
+                const username = document.createElement("span");
+                username.classList.add("username");
+                username.textContent = "User123"; // Placeholder username, use dynamic value from Firebase later
+
+                const time = document.createElement("span");
+                time.classList.add("time");
+                const currentTime = new Date();
+                time.textContent = `${currentTime.getHours()}:${currentTime.getMinutes()}`;
+
+                const messageTextElement = document.createElement("span");
+                messageTextElement.textContent = messageText;
+
+                content.appendChild(username);
+                content.appendChild(time);
+                content.appendChild(messageTextElement);
+
+                messageElement.appendChild(profilePic);
+                messageElement.appendChild(content);
+
+                const chatArea = document.getElementById("messagesArea");
+                chatArea.appendChild(messageElement);
+
+                chatArea.scrollTop = chatArea.scrollHeight;
+
+                messageInput.value = "";
+            }
+        }
+    </script>
 </body>
 </html>
