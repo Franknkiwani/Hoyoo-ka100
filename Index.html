@@ -1,305 +1,150 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Cyberpunk Group Chat</title>
-  <style>
-    /* General Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #0d0d0d;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
 
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #0d0d0d;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
-    }
+.chat-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 
-    .chat-app {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
+.chat-header {
+  background: linear-gradient(90deg, #ff00c3, #00d4ff);
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  text-transform: uppercase;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  position: sticky;
+  top: 0;
+  z-index: 10; /* Ensures it's on top */
+}
 
-    .chat-header {
-      background: linear-gradient(90deg, #ff00c3, #00d4ff);
-      color: #fff;
-      text-align: center;
-      padding: 20px;
-      font-size: 24px;
-      font-weight: bold;
-      text-transform: uppercase;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-      position: relative;
-    }
+.chat-header .user-info {
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid #ff00c3;
+  border-radius: 20px;
+  padding: 5px 15px;
+  gap: 10px;
+  font-size: 14px;
+}
 
-    .chat-header .user-info {
-      position: absolute;
-      bottom: -25px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      background: rgba(0, 0, 0, 0.8);
-      border: 1px solid #ff00c3;
-      border-radius: 20px;
-      padding: 5px 15px;
-      gap: 10px;
-      font-size: 14px;
-    }
+.chat-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  overflow: hidden;
+  margin-top: 30px; /* To accommodate user-info under the header */
+}
 
-    .chat-header .user-info input {
-      background: none;
-      border: none;
-      color: #fff;
-      outline: none;
-      font-size: 14px;
-      width: auto;
-    }
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #ff00c3 #0d0d0d;
+}
 
-    .chat-header .user-info .edit-icon {
-      cursor: pointer;
-      color: #ff00c3;
-      font-size: 16px;
-    }
+.messages::-webkit-scrollbar {
+  width: 8px;
+}
 
-    .chat-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 10px;
-      overflow: hidden;
-      margin-top: 30px; /* To accommodate user-info under the header */
-    }
+.messages::-webkit-scrollbar-thumb {
+  background: #ff00c3;
+  border-radius: 10px;
+}
 
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px;
-      scrollbar-width: thin;
-      scrollbar-color: #ff00c3 #0d0d0d;
-    }
+.messages::-webkit-scrollbar-track {
+  background: #0d0d0d;
+}
 
-    .messages::-webkit-scrollbar {
-      width: 8px;
-    }
+.message {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 15px 0;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
 
-    .messages::-webkit-scrollbar-thumb {
-      background: #ff00c3;
-      border-radius: 10px;
-    }
+.message img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
 
-    .messages::-webkit-scrollbar-track {
-      background: #0d0d0d;
-    }
+.message-content {
+  display: flex;
+  flex-direction: column;
+}
 
-    .message {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      margin: 15px 0;
-      padding: 10px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-    }
+.message-content .user-info {
+  font-size: 12px;
+  color: #ff00c3;
+  margin-bottom: 5px;
+}
 
-    .message img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-    }
+.message-content .text {
+  font-size: 16px;
+  color: #e6e6e6;
+}
 
-    .message-content {
-      display: flex;
-      flex-direction: column;
-    }
+.message-content .timestamp {
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 5px;
+}
 
-    .message-content .user-info {
-      font-size: 12px;
-      color: #ff00c3;
-      margin-bottom: 5px;
-    }
+.message-form {
+  display: flex;
+  gap: 10px;
+  padding: 15px;
+  background: #0d0d0d;
+  border-top: 2px solid #ff00c3;
+  position: sticky;
+  bottom: 0;
+  z-index: 10; /* Ensures it's on top */
+}
 
-    .message-content .text {
-      font-size: 16px;
-      color: #e6e6e6;
-    }
+.message-input {
+  flex: 1;
+  padding: 15px;
+  font-size: 16px;
+  border: 2px solid #ff00c3;
+  border-radius: 10px;
+  background: #0d0d0d;
+  color: #fff;
+  outline: none;
+}
 
-    .message-content .timestamp {
-      font-size: 12px;
-      color: #aaa;
-      margin-top: 5px;
-    }
+.send-button {
+  background: #ff00c3;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
 
-    .message-form {
-      display: flex;
-      gap: 10px;
-      padding: 15px;
-      background: #0d0d0d;
-      border-top: 2px solid #ff00c3;
-    }
-
-    .message-input {
-      flex: 1;
-      padding: 15px;
-      font-size: 16px;
-      border: 2px solid #ff00c3;
-      border-radius: 10px;
-      background: #0d0d0d;
-      color: #fff;
-      outline: none;
-    }
-
-    .send-button {
-      background: #ff00c3;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.3s ease;
-    }
-
-    .send-button:hover {
-      background: #d100a8;
-    }
-  </style>
-</head>
-<body>
-  <div class="chat-app">
-    <header class="chat-header">
-      Cyberpunk Chat <span>💾</span>
-      <div class="user-info">
-        <input type="text" id="displayName" value="User123" readonly>
-        <span class="edit-icon" id="editName">✏️</span>
-      </div>
-    </header>
-    <main class="chat-container">
-      <div class="messages" id="messages">
-        <!-- Messages will appear here -->
-      </div>
-      <form class="message-form" id="messageForm">
-        <input type="text" class="message-input" id="messageInput" placeholder="Type your message..." required>
-        <button type="submit" class="send-button">Send</button>
-      </form>
-    </main>
-  </div>
-
-  <script type="module">
-    // Import Firebase SDKs
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
-
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyDFHskUWiyHhZke3KT9kkOtFI_gPsKfiGo",
-      authDomain: "itzhoyoo-f9f7e.firebaseapp.com",
-      projectId: "itzhoyoo-f9f7e",
-      storageBucket: "itzhoyoo-f9f7e.firebasestorage.app",
-      messagingSenderId: "1094792075584",
-      appId: "1:1094792075584:web:c6ec93a74335c4761082a5",
-      measurementId: "G-C3X9ENP72H"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    // DOM elements
-    const displayNameInput = document.getElementById('displayName');
-    const editNameIcon = document.getElementById('editName');
-    const messageForm = document.getElementById('messageForm');
-    const messageInput = document.getElementById('messageInput');
-    const messagesContainer = document.getElementById('messages');
-
-    // Set up localStorage for user ID and name
-    const userId = localStorage.getItem('userId') || `user-${Math.floor(Math.random() * 100000)}`;
-    const userName = localStorage.getItem('userName') || userId;
-    localStorage.setItem('userId', userId);
-
-    // Load user's name into input
-    displayNameInput.value = userName;
-
-    // Enable editing the name
-    editNameIcon.addEventListener('click', () => {
-      displayNameInput.removeAttribute('readonly');
-      displayNameInput.focus();
-    });
-
-    // Save the updated name
-    displayNameInput.addEventListener('blur', () => {
-      const updatedName = displayNameInput.value.trim();
-      if (updatedName) {
-        localStorage.setItem('userName', updatedName);
-      } else {
-        displayNameInput.value = userName; // Revert if empty
-      }
-      displayNameInput.setAttribute('readonly', true);
-    });
-
-    // Load messages from Firebase
-    function loadMessages() {
-      const messagesRef = ref(db, 'messages');
-      onChildAdded(messagesRef, (snapshot) => {
-        const message = snapshot.val();
-        displayMessage(message.sender, message.text, message.timestamp);
-      });
-    }
-
-    // Display messages
-    function displayMessage(sender, text, timestamp) {
-      const messageElement = document.createElement('div');
-      messageElement.classList.add('message');
-
-      const formattedTime = new Date(timestamp).toLocaleTimeString();
-
-      messageElement.innerHTML = `
-        <img src="https://picsum.photos/seed/${sender}/40" alt="User Icon">
-        <div class="message-content">
-          <div class="user-info">${sender}</div>
-          <div class="text">${text}</div>
-          <div class="timestamp">${formattedTime}</div>
-        </div>
-      `;
-      messagesContainer.appendChild(messageElement);
-
-      // Scroll to the bottom
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-
-    // Save message to Firebase
-    function saveMessage(sender, text) {
-      const messagesRef = ref(db, 'messages');
-      push(messagesRef, {
-        sender,
-        text,
-        timestamp: Date.now()
-      });
-    }
-
-    // Handle sending messages
-    messageForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const messageText = messageInput.value.trim();
-      if (messageText) {
-        saveMessage(userName, messageText);  // Save message to Firebase
-        displayMessage(userName, messageText, Date.now());  // Display locally
-      }
-
-      messageInput.value = '';  // Clear the input field
-    });
-
-    // Load messages on page load
-    loadMessages();
-  </script>
-</body>
+.send-button:hover {
+  background: #d100a8;
+}
