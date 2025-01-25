@@ -142,14 +142,24 @@
             font-size: 12px;
         }
 
+        .message .profile-section {
+            text-align: center;
+            margin-right: 10px;
+        }
+
         .message .profile-pic {
-            width: 25px;
-            height: 25px;
+            width: 35px;
+            height: 35px;
             background: #121212;
             border-radius: 50%;
-            margin-right: 8px;
+            margin-bottom: 4px;
             border: 2px solid #00ff88;
             box-shadow: 0 0 10px #00ff88;
+        }
+
+        .message .username {
+            font-size: 10px;
+            color: #00ffaa;
         }
 
         .message .content {
@@ -194,48 +204,113 @@
         </form>
     </div>
 
-    <script>
-        const form = document.getElementById("messageForm");
-        const input = document.getElementById("messageInput");
-        const messagesContainer = document.getElementById("messagesContainer");
+<!-- Firebase -->
+  <script type="module">
+    // Import Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, updateDoc, doc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-            const messageText = input.value.trim();
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDFHskUWiyHhZke3KT9kkOtFI_gPsKfiGo",
+    authDomain: "itzhoyoo-f9f7e.firebaseapp.com",
+    databaseURL: "https://itzhoyoo-f9f7e-default-rtdb.firebaseio.com",
+    projectId: "itzhoyoo-f9f7e",
+    storageBucket: "itzhoyoo-f9f7e.firebasestorage.app",
+    messagingSenderId: "1094792075584",
+    appId: "1:1094792075584:web:d49e9c3f899d3cd31082a5",
+    measurementId: "G-LLT6F9WRKH"
+  };
+    // Initialize Firebase and Firestore
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-            if (messageText) {
-                const now = new Date();
-                const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    // DOM Elements
+    const form = document.getElementById("messageForm");
+    const input = document.getElementById("messageInput");
+    const messagesContainer = document.getElementById("messagesContainer");
 
-                const message = document.createElement("div");
-                message.classList.add("message");
+    // Function to display messages
+    function displayMessage(id, data) {
+      const { username, text, timestamp, views } = data;
 
-                const profilePic = document.createElement("div");
-                profilePic.classList.add("profile-pic");
+      const message = document.createElement("div");
+      message.classList.add("message");
 
-                const content = document.createElement("div");
-                content.classList.add("content");
-                content.innerHTML = `${messageText} <br><span class="timestamp">${time}</span>`;
+      // Profile Section
+      const profileSection = document.createElement("div");
+      profileSection.classList.add("profile-section");
 
-                const views = document.createElement("div");
-                views.classList.add("views");
-                views.textContent = "Views: 0";
+      // Profile Picture
+      const profilePic = document.createElement("div");
+      profilePic.classList.add("profile-pic");
 
-                message.appendChild(profilePic);
-                message.appendChild(content);
-                message.appendChild(views);
+      // Username
+      const usernameDiv = document.createElement("div");
+      usernameDiv.classList.add("username");
+      usernameDiv.textContent = username;
 
-                messagesContainer.appendChild(message);
+      profileSection.appendChild(profilePic);
+      profileSection.appendChild(usernameDiv);
 
-                let viewCount = 0;
-                message.addEventListener("click", () => {
-                    viewCount++;
-                    views.textContent = `Views: ${viewCount}`;
-                });
+      // Content Section
+      const content = document.createElement("div");
+      content.classList.add("content");
+      const time = new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      content.innerHTML = `${text} <br><span class="timestamp">${time}</span>`;
 
-                input.value = "";
-            }
-        });
+      // Views Section
+      const viewsDiv = document.createElement("div");
+      viewsDiv.classList.add("views");
+      viewsDiv.textContent = `Views: ${views}`;
+
+      message.appendChild(profileSection);
+      message.appendChild(content);
+      message.appendChild(viewsDiv);
+
+      messagesContainer.appendChild(message);
+
+      let viewCount = views;
+      message.addEventListener("click", async () => {
+        viewCount++;
+        viewsDiv.textContent = `Views: ${viewCount}`;
+
+        // Update views in Firestore
+        const messageRef = doc(db, "messages", id);
+        await updateDoc(messageRef, { views: viewCount });
+      });
+    }
+
+    // Listen for new messages in Firestore
+    const q = query(collection(db, "messages"), orderBy("timestamp", "asc"));
+    onSnapshot(q, (snapshot) => {
+      messagesContainer.innerHTML = ""; // Clear messages before re-rendering
+      snapshot.forEach((doc) => {
+        displayMessage(doc.id, doc.data());
+      });
+    });
+
+    // Add a new message to Firestore
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const messageText = input.value.trim();
+      if (messageText) {
+        const now = new Date();
+        const newMessage = {
+          username: "User123", // Replace this with dynamic username logic
+          text: messageText,
+          timestamp: now.getTime(),
+          views: 0,
+        };
+
+        // Save to Firestore
+        await addDoc(collection(db, "messages"), newMessage);
+
+        // Clear input field
+        input.value = "";
+      }
+    });
     </script>
 </body>
 </html>
