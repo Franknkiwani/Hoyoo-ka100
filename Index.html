@@ -1,227 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Cyberpunk App</title>
-    <style>
-        /* Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Firebase Chat App</title>
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            background: #0a0a0a;
-            color: #fff;
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f0f1c;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
-        header {
-            width: 100%;
-            height: 70px;
-            border: 2px solid #00ffcc;
-            background: #0a0a0a;
-            box-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc;
-            position: sticky;
-            top: 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            z-index: 1000;
-        }
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1a1a2e;
+      padding: 10px 20px;
+      z-index: 100;
+      border-bottom: 2px solid #4c4cff;
+    }
 
-        /* Hamburger Menu */
-        .menu-icon {
-            width: 35px;
-            height: 30px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            cursor: pointer;
-            animation: neon-glow 2s infinite alternate;
-        }
+    .hamburger-menu {
+      width: 35px;
+      height: 35px;
+      border: 2px solid;
+      border-radius: 50%;
+      border-image: linear-gradient(45deg, #4c4cff, #ff4ccc) 1;
+    }
 
-        .menu-icon span {
-            display: block;
-            height: 4px;
-            background: currentColor;
-            border-radius: 2px;
-            box-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
-        }
+    .profile-icon {
+      width: 35px;
+      height: 35px;
+      border: 2px solid #4cff4c;
+      border-radius: 50%;
+      background: url('https://via.placeholder.com/35') center/cover no-repeat;
+      cursor: pointer;
+    }
 
-        @keyframes neon-glow {
-            0% { color: #ff007c; }
-            33% { color: #00ffff; }
-            66% { color: #00ff88; }
-            100% { color: #ff007c; }
-        }
+    /* Popup (Modal) */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
 
-        /* Profile Picture Icon */
-        .profile-icon {
-            width: 40px;
-            height: 40px;
-            background: #121212;
-            border: 3px solid #00ff88;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #00ff88, 0 0 20px #00ff88;
-        }
+    .popup-content {
+      background: #1a1a2e;
+      padding: 20px;
+      border-radius: 8px;
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+    }
 
-        /* Sticky Footer */
-        .footer {
-            position: sticky;
-            bottom: 0;
-            background: #121212;
-            border-top: 2px solid #00ffcc;
-            box-shadow: 0 0 10px #00ffcc;
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    .popup input,
+    .popup button {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #4c4cff;
+      background: #333;
+      color: white;
+    }
 
-        .footer form {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 500px;
-            background: #1a1a1a;
-            padding: 8px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px #00ffcc;
-        }
+    .popup button {
+      background: #4c4cff;
+      cursor: pointer;
+    }
 
-        .footer input[type="text"] {
-            width: 75%;
-            padding: 6px;
-            font-size: 14px;
-            border: none;
-            border-radius: 5px;
-            background: #333;
-            color: #fff;
-        }
+    /* Main Chat Container */
+    .chat-container {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
 
-        .footer button {
-            background: #00ffcc;
-            border: none;
-            padding: 6px 12px;
-            font-size: 14px;
-            border-radius: 5px;
-            color: #0a0a0a;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
+    .message {
+      margin: 10px 0;
+      padding: 10px;
+      background: #1f1f3d;
+      border: 1px solid #4c4cff;
+      border-radius: 8px;
+      position: relative;
+    }
 
-        .footer button:hover {
-            background: #00ffaa;
-        }
+    .message .profile-section {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+    }
 
-        .messages {
-            margin: 20px auto 0;
-            width: 90%;
-            max-width: 600px;
-            background: #1a1a1a;
-            border-radius: 5px;
-            padding: 10px;
-            box-shadow: 0 0 10px #00ffcc;
-        }
+    .profile-section .profile-pic {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: url('https://via.placeholder.com/40') center/cover no-repeat;
+      margin-right: 10px;
+    }
 
-        .message {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 6px 8px;
-            background: #333;
-            border-radius: 5px;
-            box-shadow: 0 0 5px #00ffcc;
-            font-size: 12px;
-        }
+    .profile-section .username {
+      font-size: 14px;
+      font-weight: bold;
+      color: #ff4ccc;
+    }
 
-        .message .profile-section {
-            text-align: center;
-            margin-right: 10px;
-        }
+    .content {
+      font-size: 14px;
+      color: #fff;
+    }
 
-        .message .profile-pic {
-            width: 35px;
-            height: 35px;
-            background: #121212;
-            border-radius: 50%;
-            margin-bottom: 4px;
-            border: 2px solid #00ff88;
-            box-shadow: 0 0 10px #00ff88;
-        }
+    .timestamp {
+      display: block;
+      font-size: 12px;
+      color: #aaa;
+    }
 
-        .message .username {
-            font-size: 10px;
-            color: #00ffaa;
-        }
+    .views {
+      position: absolute;
+      bottom: 5px;
+      right: 10px;
+      font-size: 12px;
+      color: #4cff4c;
+    }
 
-        .message .content {
-            flex: 1;
-        }
+    /* Footer */
+    footer {
+      position: sticky;
+      bottom: 0;
+      background: #1a1a2e;
+      padding: 10px 20px;
+      border-top: 2px solid #4c4cff;
+    }
 
-        .message .timestamp {
-            font-size: 10px;
-            color: #aaa;
-            margin-top: 2px;
-        }
+    footer form {
+      display: flex;
+    }
 
-        .message .views {
-            font-size: 10px;
-            color: #00ffcc;
-            margin-left: 10px;
-        }
-    </style>
+    footer input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px 0 0 5px;
+      outline: none;
+    }
+
+    footer button {
+      padding: 10px;
+      border: none;
+      background: linear-gradient(45deg, #4c4cff, #ff4ccc);
+      color: white;
+      font-weight: bold;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+    }
+
+    footer button:hover {
+      background: linear-gradient(45deg, #ff4ccc, #4c4cff);
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <!-- Neon Hamburger Menu on the Left -->
-        <div class="menu-icon">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <!-- Profile Icon on the Right -->
-        <div class="profile-icon"></div>
-    </header>
+  <!-- Header -->
+  <header>
+    <div class="hamburger-menu"></div>
+    <div class="profile-icon" id="profileIcon"></div>
+  </header>
 
-    <!-- Messages Section -->
-    <div class="messages" id="messagesContainer">
-        <!-- Messages will appear here -->
+  <!-- Chat Container -->
+  <div class="chat-container" id="messagesContainer">
+    <!-- Messages will appear here -->
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <form id="messageForm">
+      <input type="text" id="messageInput" placeholder="Type a message..." autocomplete="off" />
+      <button type="submit">Send</button>
+    </form>
+  </footer>
+
+  <!-- Popup Modal -->
+  <div class="popup" id="popupModal">
+    <div class="popup-content">
+      <h2>Edit Profile</h2>
+      <input type="text" id="profilePicUrl" placeholder="Profile Picture URL" />
+      <input type="text" id="username" placeholder="Your Name" />
+      <input type="email" id="userEmail" placeholder="Your Email" />
+      <button id="saveProfileBtn">Save</button>
+      <button id="closePopupBtn">Close</button>
     </div>
+  </div>
 
-    <!-- Sticky Footer with Send Message -->
-    <div class="footer">
-        <form id="messageForm">
-            <input type="text" id="messageInput" placeholder="Type a message..." autocomplete="off">
-            <button type="submit">Send</button>
-        </form>
-    </div>
-
-<!-- Firebase -->
+  <!-- Firebase -->
   <script type="module">
     // Import Firebase modules
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, updateDoc, doc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, updateDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyDFHskUWiyHhZke3KT9kkOtFI_gPsKfiGo",
-    authDomain: "itzhoyoo-f9f7e.firebaseapp.com",
-    databaseURL: "https://itzhoyoo-f9f7e-default-rtdb.firebaseio.com",
-    projectId: "itzhoyoo-f9f7e",
-    storageBucket: "itzhoyoo-f9f7e.firebasestorage.app",
-    messagingSenderId: "1094792075584",
-    appId: "1:1094792075584:web:d49e9c3f899d3cd31082a5",
-    measurementId: "G-LLT6F9WRKH"
-  };
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDFHskUWiyHhZke3KT9kkOtFI_gPsKfiGo",
+      authDomain: "itzhoyoo-f9f7e.firebaseapp.com",
+      databaseURL: "https://itzhoyoo-f9f7e-default-rtdb.firebaseio.com",
+      projectId: "itzhoyoo-f9f7e",
+      storageBucket: "itzhoyoo-f9f7e.appspot.com",
+      messagingSenderId: "1094792075584",
+      appId: "1:1094792075584:web:d49e9c3f899d3cd31082a5",
+      measurementId: "G-LLT6F9WRKH"
+    };
+
     // Initialize Firebase and Firestore
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
@@ -230,10 +237,49 @@
     const form = document.getElementById("messageForm");
     const input = document.getElementById("messageInput");
     const messagesContainer = document.getElementById("messagesContainer");
+    const profileIcon = document.getElementById("profileIcon");
+    const popupModal = document.getElementById("popupModal");
+    const closePopupBtn = document.getElementById("closePopupBtn");
+    const saveProfileBtn = document.getElementById("saveProfileBtn");
+
+    // User Data
+    let userData = {
+      profilePic: "https://via.placeholder.com/35",
+      username: "Guest",
+      email: "",
+    };
+
+    // Open popup when profile icon is clicked
+    profileIcon.addEventListener("click", () => {
+      document.getElementById("profilePicUrl").value = userData.profilePic;
+      document.getElementById("username").value = userData.username;
+      document.getElementById("userEmail").value = userData.email;
+      popupModal.style.display = "flex";
+    });
+
+    // Close popup
+    closePopupBtn.addEventListener("click", () => {
+      popupModal.style.display = "none";
+    });
+
+    // Save Profile Details
+    saveProfileBtn.addEventListener("click", async () => {
+      userData.profilePic = document.getElementById("profilePicUrl").value;
+      userData.username = document.getElementById("username").value;
+      userData.email = document.getElementById("userEmail").value;
+
+      // Update profile icon
+      profileIcon.style.backgroundImage = `url(${userData.profilePic})`;
+
+      // Store in Firebase (you could use an authenticated user id here)
+      await setDoc(doc(db, "users", userData.email), userData);
+
+      popupModal.style.display = "none";
+    });
 
     // Function to display messages
     function displayMessage(id, data) {
-      const { username, text, timestamp, views } = data;
+      const { username, text, timestamp, views, profilePic } = data;
 
       const message = document.createElement("div");
       message.classList.add("message");
@@ -243,15 +289,16 @@
       profileSection.classList.add("profile-section");
 
       // Profile Picture
-      const profilePic = document.createElement("div");
-      profilePic.classList.add("profile-pic");
+      const profilePicElement = document.createElement("div");
+      profilePicElement.classList.add("profile-pic");
+      profilePicElement.style.backgroundImage = `url(${profilePic})`;
 
       // Username
       const usernameDiv = document.createElement("div");
       usernameDiv.classList.add("username");
       usernameDiv.textContent = username;
 
-      profileSection.appendChild(profilePic);
+      profileSection.appendChild(profilePicElement);
       profileSection.appendChild(usernameDiv);
 
       // Content Section
@@ -270,47 +317,35 @@
       message.appendChild(viewsDiv);
 
       messagesContainer.appendChild(message);
-
-      let viewCount = views;
-      message.addEventListener("click", async () => {
-        viewCount++;
-        viewsDiv.textContent = `Views: ${viewCount}`;
-
-        // Update views in Firestore
-        const messageRef = doc(db, "messages", id);
-        await updateDoc(messageRef, { views: viewCount });
-      });
     }
 
     // Listen for new messages in Firestore
     const q = query(collection(db, "messages"), orderBy("timestamp", "asc"));
     onSnapshot(q, (snapshot) => {
-      messagesContainer.innerHTML = ""; // Clear messages before re-rendering
+      messagesContainer.innerHTML = "";
       snapshot.forEach((doc) => {
         displayMessage(doc.id, doc.data());
       });
     });
 
-    // Add a new message to Firestore
+    // Add new message to Firestore
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const messageText = input.value.trim();
       if (messageText) {
         const now = new Date();
         const newMessage = {
-          username: "User123", // Replace this with dynamic username logic
+          username: userData.username,
           text: messageText,
           timestamp: now.getTime(),
           views: 0,
+          profilePic: userData.profilePic,
         };
 
-        // Save to Firestore
         await addDoc(collection(db, "messages"), newMessage);
-
-        // Clear input field
         input.value = "";
       }
     });
-    </script>
+  </script>
 </body>
 </html>
