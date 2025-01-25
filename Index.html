@@ -2,19 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>CYBER CHAT</title>
     <style>
         body {
             background-color: #111111;
-            -webkit-user-select: none;
-            -webkit-touch-callout: none;
-            -webkit-overflow-scrolling: touch;
             margin: 0;
             display: flex;
             flex-direction: column;
             height: 100vh;
             color: #ffffff;
+            font-family: 'Arial', sans-serif;
         }
 
         header {
@@ -138,11 +136,12 @@
             align-items: flex-start;
             background-color: #333;
             border-radius: 12px;
-            padding: 12px;
-            margin: 10px 0;
+            padding: 15px;
+            margin: 15px 0;
             color: #fff;
             max-width: 80%;
             word-wrap: break-word;
+            box-shadow: 0 2px 10px rgba(0, 255, 0, 0.4);
         }
 
         .message:nth-child(odd) {
@@ -156,33 +155,69 @@
         }
 
         .message .profile-info {
-            margin-right: 10px;
+            margin-right: 15px;
             text-align: center;
         }
 
         .message .profile-info img {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
         }
 
         .message .profile-info .username {
-            font-size: 12px;
+            font-size: 14px;
             color: #00ff00;
+            margin-top: 5px;
         }
 
         .message .content {
             flex-grow: 1;
         }
 
-        .message .content .timestamp {
-            font-size: 10px;
-            color: #888888;
+        .message .content .message-text {
+            font-size: 16px;
+            color: #ffffff;
+            line-height: 1.5;
         }
 
-        .message .content .views {
-            font-size: 10px;
-            color: #bbbbbb;
+        .message .content .timestamp {
+            font-size: 12px;
+            color: #ff00ff;
+            margin-top: 5px;
+        }
+
+        .message .content .message-options {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 8px;
+            gap: 15px;
+        }
+
+        .message .content .message-options button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .message .content .message-options button:hover {
+            background-color: #00cc00;
+        }
+
+        .message .content .message-options button:active {
+            background-color: #009900;
+        }
+
+        .message .content .reaction-counts {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-top: 5px;
+            color: #66ff66;
         }
 
     </style>
@@ -210,47 +245,148 @@
         </div>
     </footer>
 
-    <script>
-        document.getElementById('send-btn').addEventListener('click', function() {
-            var messageInput = document.getElementById('message-input');
-            var messageText = messageInput.value.trim();
+  <script type="module">
+  // Import Firebase SDKs
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+  import { getDatabase, ref, push, onChildAdded, update, get } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
 
-            if (messageText) {
-                var username = "User123"; // Placeholder for the username
-                var profilePic = "https://via.placeholder.com/150"; // Placeholder for profile image
+  // Your Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDFHskUWiyHhZke3KT9kkOtFI_gPsKfiGo",
+    authDomain: "itzhoyoo-f9f7e.firebaseapp.com",
+    databaseURL: "https://itzhoyoo-f9f7e-default-rtdb.firebaseio.com",
+    projectId: "itzhoyoo-f9f7e",
+    storageBucket: "itzhoyoo-f9f7e.firebasestorage.app",
+    messagingSenderId: "1094792075584",
+    appId: "1:1094792075584:web:d49e9c3f899d3cd31082a5",
+    measurementId: "G-LLT6F9WRKH"
+  };
 
-                // Get current timestamp
-                var timestamp = new Date().toLocaleTimeString();
+  // Initialize Firebase and Database
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
 
-                // Placeholder for views (this will later be updated with Firebase data)
-                var views = Math.floor(Math.random() * 100);
+  // Reference to messages in the database
+  const messagesRef = ref(database, "messages");
 
-                // Create message element
-                var messageElement = document.createElement('div');
-                messageElement.classList.add('message');
+  // Function to send a message
+  function sendMessage(username, profilePic, text, replyingTo = null) {
+    const messageData = {
+      username,
+      profilePic,
+      text,
+      replyingTo,
+      timestamp: new Date().toLocaleTimeString(),
+      reactions: { heart: 0, laugh: 0 }
+    };
+    push(messagesRef, messageData);
+  }
 
-                messageElement.innerHTML = `
-                    <div class="profile-info">
-                        <img src="${profilePic}" alt="Profile Image">
-                        <div class="username">${username}</div>
-                    </div>
-                    <div class="content">
-                        <div class="message-text">${messageText}</div>
-                        <div class="timestamp">${timestamp}</div>
-                        <div class="views">${views} views</div>
-                    </div>
-                `;
+  // Function to add a reaction
+  function addReaction(messageId, reactionType) {
+    const reactionRef = ref(database, `messages/${messageId}/reactions`);
+    get(reactionRef).then((snapshot) => {
+      const reactions = snapshot.val() || {};
+      const updatedCount = (reactions[reactionType] || 0) + 1;
+      update(reactionRef, { [reactionType]: updatedCount });
+    });
+  }
 
-                // Add message to the message display area
-                document.getElementById('message-display').appendChild(messageElement);
+  // Function to render a message dynamically
+  function renderMessage(messageData, messageId) {
+    const messageDisplay = document.getElementById("message-display");
 
-                // Scroll to the bottom to show the new message
-                document.getElementById('message-display').scrollTop = document.getElementById('message-display').scrollHeight;
+    const messageElement = document.createElement("div");
+    messageElement.classList.add("message");
 
-                // Clear the input field
-                messageInput.value = '';
-            }
-        });
+    const replyHTML = messageData.replyingTo
+      ? `<div class="reply-box"><span>Replying to:</span><div class="reply-text">${messageData.replyingTo}</div></div>`
+      : "";
+
+    messageElement.innerHTML = `
+      <div class="profile-info">
+        <img src="${messageData.profilePic}" alt="Profile Image">
+        <div class="username">${messageData.username}</div>
+      </div>
+      <div class="content">
+        ${replyHTML}
+        <div class="message-text">${messageData.text}</div>
+        <div class="timestamp">${messageData.timestamp}</div>
+        <div class="message-options">
+          <button class="heart-btn">❤️</button>
+          <button class="laugh-btn">😂</button>
+          <button class="reply-btn">Reply</button>
+        </div>
+        <div class="reaction-counts">
+          <span class="heart-count">${messageData.reactions.heart || 0}</span> ❤️
+          <span class="laugh-count">${messageData.reactions.laugh || 0}</span> 😂
+        </div>
+      </div>
+    `;
+
+    // Append the message to the message display
+    messageDisplay.appendChild(messageElement);
+
+    // Reaction buttons
+    const heartButton = messageElement.querySelector(".heart-btn");
+    const laughButton = messageElement.querySelector(".laugh-btn");
+    const heartCount = messageElement.querySelector(".heart-count");
+    const laughCount = messageElement.querySelector(".laugh-count");
+
+    heartButton.addEventListener("click", () => {
+      addReaction(messageId, "heart");
+    });
+
+    laughButton.addEventListener("click", () => {
+      addReaction(messageId, "laugh");
+    });
+
+    // Listen for reaction updates
+    const reactionRef = ref(database, `messages/${messageId}/reactions`);
+    onChildAdded(reactionRef, (snapshot) => {
+      const reactionType = snapshot.key;
+      const count = snapshot.val();
+      if (reactionType === "heart") {
+        heartCount.innerText = count;
+      } else if (reactionType === "laugh") {
+        laughCount.innerText = count;
+      }
+    });
+
+    // Reply functionality
+    const replyButton = messageElement.querySelector(".reply-btn");
+    replyButton.addEventListener("click", () => {
+      const input = document.getElementById("message-input");
+      input.placeholder = `Replying to: ${messageData.text}`;
+      input.focus();
+    });
+
+    // Scroll to the bottom to show the latest message
+    messageDisplay.scrollTop = messageDisplay.scrollHeight;
+  }
+
+  // Listening for new messages
+  onChildAdded(messagesRef, (snapshot) => {
+    const messageData = snapshot.val();
+    const messageId = snapshot.key;
+    renderMessage(messageData, messageId);
+  });
+
+  // Send button event listener
+  document.getElementById("send-btn").addEventListener("click", () => {
+    const messageInput = document.getElementById("message-input");
+    const messageText = messageInput.value.trim();
+
+    if (messageText) {
+      const username = "User123"; // Placeholder for username
+      const profilePic = "https://via.placeholder.com/150"; // Placeholder for profile pic
+
+      sendMessage(username, profilePic, messageText);
+      messageInput.value = ""; // Clear input field
+    }
+  });
+</script>
+
     </script>
 </body>
 </html>
