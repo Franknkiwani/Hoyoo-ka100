@@ -3,268 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyberpunk Header with Profile and Message Input</title>
+    <title>Cyberpunk App</title>
     <style>
+        /* Reset */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* Default Cyberpunk Theme */
-        :root {
-            --bg-color: #0d0d0d; /* Dark background */
-            --border-color: #00ffff; /* Neon cyan borders */
-            --shadow-color: #ff00ff; /* Neon pink shadows */
-            --profile-border: #00ff00; /* Neon green profile border */
-            --slider-on-color: #007bff; /* Blue slider when on */
-            --slider-off-color: #ccc; /* Grey slider when off */
-            --slider-knob-color: white; /* White knob */
-            --text-color: #ffffff; /* White text */
-        }
-
-        /* White Theme */
-        .white-theme {
-            --bg-color: #ffffff; /* Light background */
-            --border-color: #ff00ff; /* Neon pink borders */
-            --shadow-color: #00ffff; /* Neon cyan shadows */
-            --profile-border: #00ff00; /* Green profile border (kept green) */
-            --slider-on-color: #007bff; /* Blue slider when on */
-            --slider-off-color: #ccc; /* Grey slider when off */
-            --slider-knob-color: #0d0d0d; /* Dark knob */
-            --text-color: #0d0d0d; /* Dark text */
-        }
-
         body {
-            height: 100vh;
-            background-color: var(--bg-color);
-            font-family: 'Orbitron', sans-serif; /* Futuristic font */
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            transition: background-color 0.3s, color 0.3s;
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
         }
 
         header {
             width: 100%;
             height: 70px;
+            border: 2px solid #00ffcc;
+            background: #0a0a0a;
+            box-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc;
+            position: sticky;
+            top: 0;
             display: flex;
-            justify-content: space-between; /* Spread the items */
+            justify-content: space-between;
             align-items: center;
-            border: 2px solid var(--border-color); /* Neon edges */
-            box-shadow: 0 0 20px var(--border-color), 0 0 40px var(--shadow-color);
-            background-color: rgba(13, 13, 13, 0.9); /* Semi-transparent dark */
             padding: 0 20px;
-            transition: border 0.3s, box-shadow 0.3s;
+            z-index: 1000;
         }
 
-        .menu {
-            width: 30px;
-            height: 25px;
+        /* Hamburger Menu */
+        .menu-icon {
+            width: 35px;
+            height: 30px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             cursor: pointer;
+            animation: neon-glow 2s infinite alternate;
         }
 
-        .menu div {
-            width: 30px;
-            height: 5px;
-            background-color: var(--border-color);
-            border-radius: 5px;
-            transition: 0.3s;
+        .menu-icon span {
+            display: block;
+            height: 4px;
+            background: currentColor;
+            border-radius: 2px;
+            box-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
         }
 
-        .menu:hover div {
-            background-color: var(--shadow-color);
+        @keyframes neon-glow {
+            0% { color: #ff007c; }
+            33% { color: #00ffff; }
+            66% { color: #00ff88; }
+            100% { color: #ff007c; }
         }
 
-        .header-right {
-            display: flex;
-            align-items: center; /* Aligns toggle and profile next to each other */
-        }
-
-        .toggle {
-            position: relative;
-            width: 40px;
-            height: 20px;
-            margin-right: 20px;
-        }
-
-        .toggle input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--slider-off-color);
-            transition: 0.4s;
-            border-radius: 50px;
-        }
-
-        .toggle .slider:before {
-            content: "";
-            position: absolute;
-            height: 12px;
-            width: 12px;
-            border-radius: 50%;
-            left: 4px;
-            bottom: 4px;
-            background-color: var(--slider-knob-color);
-            transition: 0.4s;
-        }
-
-        .toggle input:checked + .slider {
-            background-color: var(--slider-on-color);
-        }
-
-        .toggle input:checked + .slider:before {
-            transform: translateX(20px); /* Move slider */
-        }
-
-        .profile {
+        /* Profile Picture Icon */
+        .profile-icon {
             width: 50px;
             height: 50px;
-            border-radius: 50%; /* Circle shape */
-            border: 3px solid var(--profile-border); /* Green profile border */
-            background-image: url('https://picsum.photos/seed/profile/200/200'); /* Random Picsum Image */
-            background-size: cover;
-            background-position: center;
-            box-shadow: 0 0 15px var(--profile-border); /* Neon green glow */
+            background: #121212;
+            border: 3px solid #00ff88;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #00ff88, 0 0 30px #00ff88;
         }
 
-        /* Message Input Section */
-        .message-section {
-            padding: 20px;
-            text-align: center;
-            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
-            border-radius: 10px;
-            box-shadow: 0 0 20px var(--border-color);
-            margin-top: auto;
+        /* Modern Menu */
+        .menu {
+            display: flex;
+            justify-content: center;
+            background: #121212;
+            border-top: 2px solid #00ffcc;
+            box-shadow: 0 0 10px #00ffcc;
+            padding: 15px 0;
+            position: sticky;
+            top: 70px;
+            z-index: 999;
         }
 
-        .message-section h2 {
-            color: var(--text-color);
-            margin-bottom: 10px;
-            font-size: 24px;
-        }
-
-        .message-input {
-            width: 100%;
-            padding: 15px;
-            font-size: 16px;
-            border: 2px solid var(--border-color);
-            border-radius: 5px;
-            background-color: transparent;
-            color: var(--text-color);
-            outline: none;
-            box-shadow: 0 0 10px var(--shadow-color);
-            transition: border-color 0.3s;
-        }
-
-        .message-input:focus {
-            border-color: #00ff00;
-        }
-
-        .message-button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            background-color: #00ffff;
-            color: #000;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 0 10px var(--shadow-color);
-            transition: background-color 0.3s;
-        }
-
-        .message-button:hover {
-            background-color: #ff00ff;
-        }
-
-        /* Messages Container */
-        .messages-container {
-            flex-grow: 1;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.5);
-            overflow-y: auto;
-            margin-top: 20px;
-            max-height: 60vh;
-        }
-
-        .message {
-            background-color: rgba(0, 255, 255, 0.2);
-            border-radius: 10px;
-            padding: 10px;
-            margin-bottom: 10px;
+        .menu a {
+            text-decoration: none;
             color: #fff;
-            font-size: 16px;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+            margin: 0 20px;
+            font-size: 18px;
+            position: relative;
+            transition: color 0.3s;
         }
 
+        .menu a:hover {
+            color: #00ffff;
+        }
+
+        .menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00ffff;
+            transition: width 0.3s;
+        }
+
+        .menu a:hover::after {
+            width: 100%;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            border: 5px solid #ff007c;
+            box-shadow: 0 0 30px #ff007c, 0 0 60px #00ffff;
+            pointer-events: none;
+        }
+
+        /* Demo Content */
+        .content {
+            padding: 20px;
+            margin-top: 150px;
+            text-align: center;
+            color: #fff;
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
     <header>
-        <div class="menu" onclick="showPopup()">
-            <div></div>
-            <div></div>
-            <div></div>
+        <!-- Neon Hamburger Menu on the Left -->
+        <div class="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
-        <div class="header-right">
-            <label for="toggle" class="toggle">
-                <input type="checkbox" id="toggle" onchange="toggleTheme()">
-                <span class="slider"></span>
-            </label>
-            <div class="profile"></div>
-        </div>
+        <!-- Profile Icon on the Right -->
+        <div class="profile-icon"></div>
     </header>
+    
+    <!-- Modern Menu -->
+    <nav class="menu">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#contact">Contact</a>
+    </nav>
 
-    <!-- Messages Container -->
-    <div class="messages-container" id="messages-container">
-        <!-- Sent messages will appear here -->
+    <!-- Demo Content -->
+    <div class="content">
+        <p>Scroll down to see the sticky header and menu in action.</p>
+        <p style="margin-top: 1000px;">End of Content.</p>
     </div>
-
-    <!-- Message Input Section -->
-    <section class="message-section">
-        <h2>Send Us a Message</h2>
-        <input type="text" class="message-input" id="message-input" placeholder="Type your message here...">
-        <button class="message-button" onclick="sendMessage()">Send</button>
-    </section>
-
-    <script>
-        function toggleTheme() {
-            const body = document.body;
-            const toggle = document.getElementById('toggle');
-            if (toggle.checked) {
-                body.classList.add('white-theme');
-            } else {
-                body.classList.remove('white-theme');
-            }
-        }
-
-        function sendMessage() {
-            const messageInput = document.getElementById('message-input');
-            const messageText = messageInput.value.trim();
-            if (messageText) {
-                const messageContainer = document.getElementById('messages-container');
-                const newMessage = document.createElement('div');
-                newMessage.classList.add('message');
-                newMessage.textContent = messageText;
-
-                messageContainer.appendChild(newMessage);
-                messageInput.value = ''; // Clear the input field
-                messageContainer.scrollTop = messageContainer.scrollHeight; // Scroll to bottom
-            }
-        }
-    </script>
 </body>
 </html>
