@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Cyberpunk App</title>
     <style>
         /* Reset */
@@ -16,6 +16,9 @@
             background: #0a0a0a;
             color: #fff;
             font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         header {
@@ -61,71 +64,108 @@
 
         /* Profile Picture Icon */
         .profile-icon {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             background: #121212;
             border: 3px solid #00ff88;
             border-radius: 50%;
-            box-shadow: 0 0 15px #00ff88, 0 0 30px #00ff88;
+            box-shadow: 0 0 10px #00ff88, 0 0 20px #00ff88;
         }
 
-        /* Modern Menu */
-        .menu {
-            display: flex;
-            justify-content: center;
+        /* Sticky Footer */
+        .footer {
+            position: sticky;
+            bottom: 0;
             background: #121212;
             border-top: 2px solid #00ffcc;
             box-shadow: 0 0 10px #00ffcc;
-            padding: 15px 0;
-            position: sticky;
-            top: 70px;
-            z-index: 999;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .menu a {
-            text-decoration: none;
-            color: #fff;
-            margin: 0 20px;
-            font-size: 18px;
-            position: relative;
-            transition: color 0.3s;
-        }
-
-        .menu a:hover {
-            color: #00ffff;
-        }
-
-        .menu a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #00ffff;
-            transition: width 0.3s;
-        }
-
-        .menu a:hover::after {
+        .footer form {
+            display: flex;
+            justify-content: space-between;
             width: 100%;
+            max-width: 500px;
+            background: #1a1a1a;
+            padding: 8px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px #00ffcc;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            border: 5px solid #ff007c;
-            box-shadow: 0 0 30px #ff007c, 0 0 60px #00ffff;
-            pointer-events: none;
-        }
-
-        /* Demo Content */
-        .content {
-            padding: 20px;
-            margin-top: 150px;
-            text-align: center;
+        .footer input[type="text"] {
+            width: 75%;
+            padding: 6px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            background: #333;
             color: #fff;
-            font-size: 20px;
+        }
+
+        .footer button {
+            background: #00ffcc;
+            border: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            border-radius: 5px;
+            color: #0a0a0a;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .footer button:hover {
+            background: #00ffaa;
+        }
+
+        .messages {
+            margin: 20px auto 0;
+            width: 90%;
+            max-width: 600px;
+            background: #1a1a1a;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 0 10px #00ffcc;
+        }
+
+        .message {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 6px 8px;
+            background: #333;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #00ffcc;
+            font-size: 12px;
+        }
+
+        .message .profile-pic {
+            width: 25px;
+            height: 25px;
+            background: #121212;
+            border-radius: 50%;
+            margin-right: 8px;
+            border: 2px solid #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+        }
+
+        .message .content {
+            flex: 1;
+        }
+
+        .message .timestamp {
+            font-size: 10px;
+            color: #aaa;
+            margin-top: 2px;
+        }
+
+        .message .views {
+            font-size: 10px;
+            color: #00ffcc;
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -140,19 +180,62 @@
         <!-- Profile Icon on the Right -->
         <div class="profile-icon"></div>
     </header>
-    
-    <!-- Modern Menu -->
-    <nav class="menu">
-        <a href="#home">Home</a>
-        <a href="#about">About</a>
-        <a href="#services">Services</a>
-        <a href="#contact">Contact</a>
-    </nav>
 
-    <!-- Demo Content -->
-    <div class="content">
-        <p>Scroll down to see the sticky header and menu in action.</p>
-        <p style="margin-top: 1000px;">End of Content.</p>
+    <!-- Messages Section -->
+    <div class="messages" id="messagesContainer">
+        <!-- Messages will appear here -->
     </div>
+
+    <!-- Sticky Footer with Send Message -->
+    <div class="footer">
+        <form id="messageForm">
+            <input type="text" id="messageInput" placeholder="Type a message..." autocomplete="off">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById("messageForm");
+        const input = document.getElementById("messageInput");
+        const messagesContainer = document.getElementById("messagesContainer");
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const messageText = input.value.trim();
+
+            if (messageText) {
+                const now = new Date();
+                const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                const message = document.createElement("div");
+                message.classList.add("message");
+
+                const profilePic = document.createElement("div");
+                profilePic.classList.add("profile-pic");
+
+                const content = document.createElement("div");
+                content.classList.add("content");
+                content.innerHTML = `${messageText} <br><span class="timestamp">${time}</span>`;
+
+                const views = document.createElement("div");
+                views.classList.add("views");
+                views.textContent = "Views: 0";
+
+                message.appendChild(profilePic);
+                message.appendChild(content);
+                message.appendChild(views);
+
+                messagesContainer.appendChild(message);
+
+                let viewCount = 0;
+                message.addEventListener("click", () => {
+                    viewCount++;
+                    views.textContent = `Views: ${viewCount}`;
+                });
+
+                input.value = "";
+            }
+        });
+    </script>
 </body>
 </html>
