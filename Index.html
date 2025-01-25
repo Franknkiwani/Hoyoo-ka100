@@ -2,255 +2,272 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>CYBER CHAT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberpunk Chat App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet"> <!-- Bold modern font -->
     <style>
         body {
-            background-color: #111111;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
+            padding: 0;
+            background-color: #111;
+            color: #fff;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            height: 100vh;
-            color: #ffffff;
-            font-family: 'Arial', sans-serif;
         }
 
+        /* Sticky Header */
         header {
-            background-color: #000000;
-            height: 60px;
+            background-color: #1a1a1a;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             position: sticky;
             top: 0;
             z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 4px 10px rgba(0, 255, 255, 0.2);
+            -webkit-box-shadow: 0 4px 10px rgba(0, 255, 255, 0.2); /* For Safari */
         }
 
-        header::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, #ff00ff, #00ffff, #ff00ff);
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5), 0 0 30px rgba(0, 255, 255, 0.5);
-            animation: neon 1.5s ease-in-out infinite alternate;
-        }
-
-        @keyframes neon {
-            0% {
-                opacity: 0.5;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        .hamburger {
+        .menu-icon {
+            width: 30px;
+            height: 25px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            width: 30px;
-            height: 22px;
+            align-items: center;
             cursor: pointer;
         }
 
-        .hamburger div {
-            background-color: #ffffff;
-            height: 4px;
-            width: 100%;
+        .menu-icon div {
+            width: 30px;
+            height: 5px;
+            background-color: #00ff99;
             border-radius: 5px;
         }
 
-        .profile-icon {
+        .menu-icon div:hover {
+            background-color: #ff0080;
+        }
+
+        /* Profile circle container */
+        .profile-container {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            border: 3px solid #00FF00; /* Green border */
+            border: 3px solid #00ff99;
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
         }
 
-        .profile-icon img {
+        .profile-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
+        /* Chat container styling */
+        .chat-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: calc(100vh - 120px);
+        }
+
+        .message {
+            background-color: #333;
+            padding: 10px;
+            margin-bottom: 20px; /* Increased gap between messages */
+            border-radius: 10px;
+            max-width: 60%;
+            color: #fff;
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message-user {
+            align-self: flex-end;
+            background-color: #007bff; /* Blue for user messages */
+        }
+
+        .message-system {
+            align-self: flex-start;
+            background-color: #00ff99;
+        }
+
+        .message .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid #00ff99;
+            overflow: hidden;
+        }
+
+        .message .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .message .content {
+            max-width: 80%;
+        }
+
+        .message .name {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .message .ticks {
+            position: absolute;
+            bottom: -18px;
+            right: 10px;
+            font-size: 12px;
+            color: #fff;
+        }
+
+        .message .ticks .tick {
+            margin-right: 5px;
+        }
+
+        .message .views {
+            position: absolute;
+            bottom: -18px;
+            right: 40px;
+            font-size: 12px;
+            color: #fff;
+        }
+
+        /* Footer styling for message input */
         footer {
-            background-color: #000000;
-            height: 100px;
+            background-color: #1a1a1a;
+            padding: 10px;
             position: sticky;
             bottom: 0;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 15px;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.7);
-        }
-
-        .input-container {
             width: 100%;
+            z-index: 5;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+            box-shadow: 0 -4px 10px rgba(0, 255, 255, 0.2);
+            -webkit-box-shadow: 0 -4px 10px rgba(0, 255, 255, 0.2); /* For Safari */
         }
 
-        .input-container input {
-            width: 80%;
+        .send-message-container {
+            display: flex;
+            align-items: center;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 30px;
+            background-color: #333;
             padding: 10px;
-            background-color: #222222;
-            border: none;
-            border-radius: 25px;
-            color: #ffffff;
-            font-size: 14px;
-            outline: none;
         }
 
-        .send-btn {
-            background-color: #00ff00;
-            color: #000000;
+        .send-message-container input {
+            flex-grow: 1;
+            padding: 12px;
+            margin-right: 10px;
+            background-color: #222;
             border: none;
-            padding: 10px 20px;
             border-radius: 25px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .send-message-container input:focus {
+            background-color: #444;
+        }
+
+        .send-message-container button {
+            background-color: #00ff99;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            color: white;
+            font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
-        .send-btn:hover {
-            background-color: #00cc00;
-        }
-
-        .message-display {
-            padding: 15px;
-            height: calc(100vh - 160px);
-            overflow-y: scroll;
-            background-color: #1c1c1c;
-        }
-
-        .message {
-            display: flex;
-            align-items: flex-start;
-            background-color: #333;
-            border-radius: 12px;
-            padding: 15px;
-            margin: 15px 0;
-            color: #fff;
-            max-width: 80%;
-            word-wrap: break-word;
-            box-shadow: 0 2px 10px rgba(0, 255, 0, 0.4);
-        }
-
-        .message:nth-child(odd) {
-            background-color: #444;
-            align-self: flex-start;
-        }
-
-        .message:nth-child(even) {
-            background-color: #555;
-            align-self: flex-end;
-        }
-
-        .message .profile-info {
-            margin-right: 15px;
-            text-align: center;
-        }
-
-        .message .profile-info img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-        }
-
-        .message .profile-info .username {
-            font-size: 14px;
-            color: #00ff00;
-            margin-top: 5px;
-        }
-
-        .message .content {
-            flex-grow: 1;
-        }
-
-        .message .content .message-text {
-            font-size: 16px;
-            color: #ffffff;
-            line-height: 1.5;
-        }
-
-        .message .content .timestamp {
-            font-size: 12px;
-            color: #ff00ff;
-            margin-top: 5px;
-        }
-
-        .message .content .message-options {
-            display: flex;
-            justify-content: flex-start;
-            margin-top: 8px;
-            gap: 15px;
-        }
-
-        .message .content .message-options button {
-            background-color: #333;
-            color: #fff;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .message .content .message-options button:hover {
-            background-color: #00cc00;
-        }
-
-        .message .content .message-options button:active {
-            background-color: #009900;
-        }
-
-        .message .content .reaction-counts {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            margin-top: 5px;
-            color: #66ff66;
+        .send-message-container button:hover {
+            background-color: #009966;
         }
 
     </style>
 </head>
 <body>
-    <header>
-        <div class="hamburger">
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-        <div class="profile-icon">
-            <img src="https://via.placeholder.com/150" alt="Profile Image">
-        </div>
-    </header>
 
-    <div class="message-display" id="message-display">
-        <!-- Messages will appear here -->
+<header>
+    <div class="menu-icon">
+        <div></div>
+        <div></div>
+        <div></div>
     </div>
 
-    <footer>
-        <div class="input-container">
-            <input type="text" id="message-input" placeholder="Type your message...">
-            <button class="send-btn" id="send-btn">Send</button>
+    <!-- Clickable Profile Container -->
+    <a href="/profile" class="profile-container">
+        <img src="https://via.placeholder.com/150" alt="Profile">
+    </a>
+</header>
+
+<!-- Chat Container -->
+<main class="chat-container" id="chatContainer">
+    <!-- Example chat messages will go here -->
+    <div class="message message-user">
+        <div class="profile-pic">
+            <img src="https://via.placeholder.com/150" alt="User">
         </div>
-    </footer>
+        <div class="content">
+            <div class="name">User Name</div>
+            Hey, how's it going?
+            <div class="ticks">
+                <span class="tick">✓</span><span class="tick">✓</span>
+            </div>
+            <div class="views">Views: 0</div>
+        </div>
+    </div>
+    <div class="message message-system">
+        <div class="profile-pic">
+            <img src="https://via.placeholder.com/150" alt="System">
+        </div>
+        <div class="content">
+            <div class="name">System Name</div>
+            I'm doing great, thanks! How about you?
+            <div class="ticks">
+                <span class="tick">✓</span>
+            </div>
+            <div class="views">Views: 0</div>
+        </div>
+    </div>
+</main>
 
-  <script type="module">
-  // Import Firebase SDKs
+<!-- Clean, Fluffy Send Message Input and Button in Footer -->
+<footer>
+    <div class="send-message-container">
+        <input type="text" placeholder="Type a message..." id="messageInput">
+        <button id="sendButton">Send</button>
+    </div>
+</footer>
+
+<!-- Firebase SDK -->
+<script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-  import { getDatabase, ref, push, onChildAdded, update, get } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+  import { getFirestore, doc, setDoc, getDoc, updateDoc, increment, getDocs, collection } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 
-  // Your Firebase configuration
+  // Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyDFHskUWiyHhZke3KT9kkOtFI_gPsKfiGo",
     authDomain: "itzhoyoo-f9f7e.firebaseapp.com",
@@ -262,131 +279,122 @@
     measurementId: "G-LLT6F9WRKH"
   };
 
-  // Initialize Firebase and Database
+  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
+  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
 
-  // Reference to messages in the database
-  const messagesRef = ref(database, "messages");
+  // Chat container elements
+  const chatContainer = document.getElementById('chatContainer');
+  const messageInput = document.getElementById('messageInput');
+  const sendButton = document.getElementById('sendButton');
 
-  // Function to send a message
-  function sendMessage(username, profilePic, text, replyingTo = null) {
-    const messageData = {
-      username,
-      profilePic,
-      text,
-      replyingTo,
-      timestamp: new Date().toLocaleTimeString(),
-      reactions: { heart: 0, laugh: 0 }
-    };
-    push(messagesRef, messageData);
-  }
+  // Track seen messages
+  const seenMessages = JSON.parse(localStorage.getItem('seenMessages')) || [];
 
-  // Function to add a reaction
-  function addReaction(messageId, reactionType) {
-    const reactionRef = ref(database, `messages/${messageId}/reactions`);
-    get(reactionRef).then((snapshot) => {
-      const reactions = snapshot.val() || {};
-      const updatedCount = (reactions[reactionType] || 0) + 1;
-      update(reactionRef, { [reactionType]: updatedCount });
-    });
-  }
-
-  // Function to render a message dynamically
-  function renderMessage(messageData, messageId) {
-    const messageDisplay = document.getElementById("message-display");
-
-    const messageElement = document.createElement("div");
-    messageElement.classList.add("message");
-
-    const replyHTML = messageData.replyingTo
-      ? `<div class="reply-box"><span>Replying to:</span><div class="reply-text">${messageData.replyingTo}</div></div>`
-      : "";
-
-    messageElement.innerHTML = `
-      <div class="profile-info">
-        <img src="${messageData.profilePic}" alt="Profile Image">
-        <div class="username">${messageData.username}</div>
-      </div>
-      <div class="content">
-        ${replyHTML}
-        <div class="message-text">${messageData.text}</div>
-        <div class="timestamp">${messageData.timestamp}</div>
-        <div class="message-options">
-          <button class="heart-btn">❤️</button>
-          <button class="laugh-btn">😂</button>
-          <button class="reply-btn">Reply</button>
-        </div>
-        <div class="reaction-counts">
-          <span class="heart-count">${messageData.reactions.heart || 0}</span> ❤️
-          <span class="laugh-count">${messageData.reactions.laugh || 0}</span> 😂
-        </div>
-      </div>
-    `;
-
-    // Append the message to the message display
-    messageDisplay.appendChild(messageElement);
-
-    // Reaction buttons
-    const heartButton = messageElement.querySelector(".heart-btn");
-    const laughButton = messageElement.querySelector(".laugh-btn");
-    const heartCount = messageElement.querySelector(".heart-count");
-    const laughCount = messageElement.querySelector(".laugh-count");
-
-    heartButton.addEventListener("click", () => {
-      addReaction(messageId, "heart");
-    });
-
-    laughButton.addEventListener("click", () => {
-      addReaction(messageId, "laugh");
-    });
-
-    // Listen for reaction updates
-    const reactionRef = ref(database, `messages/${messageId}/reactions`);
-    onChildAdded(reactionRef, (snapshot) => {
-      const reactionType = snapshot.key;
-      const count = snapshot.val();
-      if (reactionType === "heart") {
-        heartCount.innerText = count;
-      } else if (reactionType === "laugh") {
-        laughCount.innerText = count;
-      }
-    });
-
-    // Reply functionality
-    const replyButton = messageElement.querySelector(".reply-btn");
-    replyButton.addEventListener("click", () => {
-      const input = document.getElementById("message-input");
-      input.placeholder = `Replying to: ${messageData.text}`;
-      input.focus();
-    });
-
-    // Scroll to the bottom to show the latest message
-    messageDisplay.scrollTop = messageDisplay.scrollHeight;
-  }
-
-  // Listening for new messages
-  onChildAdded(messagesRef, (snapshot) => {
-    const messageData = snapshot.val();
-    const messageId = snapshot.key;
-    renderMessage(messageData, messageId);
-  });
-
-  // Send button event listener
-  document.getElementById("send-btn").addEventListener("click", () => {
-    const messageInput = document.getElementById("message-input");
+  // Send message function
+  sendButton.addEventListener('click', () => {
     const messageText = messageInput.value.trim();
-
     if (messageText) {
-      const username = "User123"; // Placeholder for username
-      const profilePic = "https://via.placeholder.com/150"; // Placeholder for profile pic
+      const messageId = `message-${Date.now()}`; // Unique message ID
 
-      sendMessage(username, profilePic, messageText);
-      messageInput.value = ""; // Clear input field
+      // Save message to Firebase
+      sendMessage(messageId, messageText, "User");
+
+      // Create and append message element
+      const newMessage = document.createElement('div');
+      newMessage.classList.add('message', 'message-user');
+      newMessage.dataset.messageId = messageId;
+
+      newMessage.innerHTML = `
+        <div class="profile-pic">
+          <img src="https://via.placeholder.com/150" alt="User">
+        </div>
+        <div class="content">
+          <div class="name">User</div>
+          ${messageText}
+          <div class="ticks">
+            <span class="tick">✓</span><span class="tick">✓</span>
+          </div>
+          <div class="views">Views: 0</div>
+        </div>
+      `;
+      chatContainer.appendChild(newMessage);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+
+      // Clear the input field
+      messageInput.value = '';
     }
   });
+
+  // Send message to Firestore
+  async function sendMessage(messageId, messageText, sender) {
+    try {
+      await setDoc(doc(db, "messages", messageId), {
+        text: messageText,
+        sender: sender,
+        viewCount: 0
+      });
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  }
+
+  // Increment view count for a message
+  async function incrementViewCount(messageId) {
+    const messageRef = doc(db, "messages", messageId);
+    const messageSnap = await getDoc(messageRef);
+
+    if (messageSnap.exists()) {
+      const messageData = messageSnap.data();
+      if (!seenMessages.includes(messageId)) {
+        // Update view count in Firestore
+        await updateDoc(messageRef, {
+          viewCount: increment(1)
+        });
+
+        // Add to localStorage to prevent double-counting views
+        seenMessages.push(messageId);
+        localStorage.setItem('seenMessages', JSON.stringify(seenMessages));
+      }
+    }
+  }
+
+  // Fetch messages from Firestore
+  async function fetchMessages() {
+    const querySnapshot = await getDocs(collection(db, "messages"));
+    querySnapshot.forEach((doc) => {
+      const message = doc.data();
+      const messageId = doc.id;
+
+      // Render message
+      const messageElement = document.createElement('div');
+      messageElement.classList.add('message', 'message-system');
+      messageElement.dataset.messageId = messageId;
+      messageElement.innerHTML = `
+        <div class="profile-pic">
+          <img src="https://via.placeholder.com/150" alt="System">
+        </div>
+        <div class="content">
+          <div class="name">${message.sender}</div>
+          ${message.text}
+          <div class="ticks">
+            <span class="tick">✓</span>
+          </div>
+          <div class="views">Views: ${message.viewCount}</div>
+        </div>
+      `;
+      chatContainer.appendChild(messageElement);
+
+      // Increment view count for unseen messages
+      incrementViewCount(messageId);
+    });
+  }
+
+  // Initialize the chat by fetching messages
+  window.addEventListener('load', fetchMessages);
 </script>
 
-    </script>
+
 </body>
 </html>
