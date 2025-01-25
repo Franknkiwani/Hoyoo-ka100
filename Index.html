@@ -1,351 +1,256 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modern Firebase Chat App</title>
-  <style>
-    /* General Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER CHAT</title>
+    <style>
+        body {
+            background-color: #111111;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-overflow-scrolling: touch;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            color: #ffffff;
+        }
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #0f0f1c;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
+        header {
+            background-color: #000000;
+            height: 60px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
+        }
 
-    /* Header */
-    header {
-      position: sticky;
-      top: 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #1a1a2e;
-      padding: 10px 20px;
-      z-index: 100;
-      border-bottom: 2px solid #4c4cff;
-    }
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #ff00ff, #00ffff, #ff00ff);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5), 0 0 30px rgba(0, 255, 255, 0.5);
+            animation: neon 1.5s ease-in-out infinite alternate;
+        }
 
-    .hamburger-menu {
-      width: 35px;
-      height: 35px;
-      border: 2px solid;
-      border-radius: 50%;
-      border-image: linear-gradient(45deg, #4c4cff, #ff4ccc) 1;
-    }
+        @keyframes neon {
+            0% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
 
-    .profile-icon {
-      width: 35px;
-      height: 35px;
-      border: 2px solid #4cff4c;
-      border-radius: 50%;
-      background: url('https://via.placeholder.com/35') center/cover no-repeat;
-      cursor: pointer;
-    }
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 22px;
+            cursor: pointer;
+        }
 
-    /* Popup (Modal) */
-    .popup {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      justify-content: center;
-      align-items: center;
-    }
+        .hamburger div {
+            background-color: #ffffff;
+            height: 4px;
+            width: 100%;
+            border-radius: 5px;
+        }
 
-    .popup-content {
-      background: #1a1a2e;
-      padding: 20px;
-      border-radius: 8px;
-      width: 300px;
-      display: flex;
-      flex-direction: column;
-    }
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid #00FF00; /* Green border */
+            overflow: hidden;
+        }
 
-    .popup input,
-    .popup button {
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      border: 1px solid #4c4cff;
-      background: #333;
-      color: white;
-    }
+        .profile-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-    .popup button {
-      background: #4c4cff;
-      cursor: pointer;
-    }
+        footer {
+            background-color: #000000;
+            height: 100px;
+            position: sticky;
+            bottom: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 15px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.7);
+        }
 
-    /* Main Chat Container */
-    .chat-container {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-    }
+        .input-container {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .message {
-      margin: 10px 0;
-      padding: 10px;
-      background: #1f1f3d;
-      border: 1px solid #4c4cff;
-      border-radius: 8px;
-      position: relative;
-    }
+        .input-container input {
+            width: 80%;
+            padding: 10px;
+            background-color: #222222;
+            border: none;
+            border-radius: 25px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+        }
 
-    .message .profile-section {
-      display: flex;
-      align-items: center;
-      margin-bottom: 5px;
-    }
+        .send-btn {
+            background-color: #00ff00;
+            color: #000000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-    .profile-section .profile-pic {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: url('https://via.placeholder.com/40') center/cover no-repeat;
-      margin-right: 10px;
-    }
+        .send-btn:hover {
+            background-color: #00cc00;
+        }
 
-    .profile-section .username {
-      font-size: 14px;
-      font-weight: bold;
-      color: #ff4ccc;
-    }
+        .message-display {
+            padding: 15px;
+            height: calc(100vh - 160px);
+            overflow-y: scroll;
+            background-color: #1c1c1c;
+        }
 
-    .content {
-      font-size: 14px;
-      color: #fff;
-    }
+        .message {
+            display: flex;
+            align-items: flex-start;
+            background-color: #333;
+            border-radius: 12px;
+            padding: 12px;
+            margin: 10px 0;
+            color: #fff;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
 
-    .timestamp {
-      display: block;
-      font-size: 12px;
-      color: #aaa;
-    }
+        .message:nth-child(odd) {
+            background-color: #444;
+            align-self: flex-start;
+        }
 
-    .views {
-      position: absolute;
-      bottom: 5px;
-      right: 10px;
-      font-size: 12px;
-      color: #4cff4c;
-    }
+        .message:nth-child(even) {
+            background-color: #555;
+            align-self: flex-end;
+        }
 
-    /* Footer */
-    footer {
-      position: sticky;
-      bottom: 0;
-      background: #1a1a2e;
-      padding: 10px 20px;
-      border-top: 2px solid #4c4cff;
-    }
+        .message .profile-info {
+            margin-right: 10px;
+            text-align: center;
+        }
 
-    footer form {
-      display: flex;
-    }
+        .message .profile-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
 
-    footer input {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 5px 0 0 5px;
-      outline: none;
-    }
+        .message .profile-info .username {
+            font-size: 12px;
+            color: #00ff00;
+        }
 
-    footer button {
-      padding: 10px;
-      border: none;
-      background: linear-gradient(45deg, #4c4cff, #ff4ccc);
-      color: white;
-      font-weight: bold;
-      border-radius: 0 5px 5px 0;
-      cursor: pointer;
-    }
+        .message .content {
+            flex-grow: 1;
+        }
 
-    footer button:hover {
-      background: linear-gradient(45deg, #ff4ccc, #4c4cff);
-    }
-  </style>
+        .message .content .timestamp {
+            font-size: 10px;
+            color: #888888;
+        }
+
+        .message .content .views {
+            font-size: 10px;
+            color: #bbbbbb;
+        }
+
+    </style>
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <div class="hamburger-menu"></div>
-    <div class="profile-icon" id="profileIcon"></div>
-  </header>
+    <header>
+        <div class="hamburger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="profile-icon">
+            <img src="https://via.placeholder.com/150" alt="Profile Image">
+        </div>
+    </header>
 
-  <!-- Chat Container -->
-  <div class="chat-container" id="messagesContainer">
-    <!-- Messages will appear here -->
-  </div>
-
-  <!-- Footer -->
-  <footer>
-    <form id="messageForm">
-      <input type="text" id="messageInput" placeholder="Type a message..." autocomplete="off" />
-      <button type="submit">Send</button>
-    </form>
-  </footer>
-
-  <!-- Popup Modal -->
-  <div class="popup" id="popupModal">
-    <div class="popup-content">
-      <h2>Edit Profile</h2>
-      <input type="text" id="profilePicUrl" placeholder="Profile Picture URL" />
-      <input type="text" id="username" placeholder="Your Name" />
-      <input type="email" id="userEmail" placeholder="Your Email" />
-      <button id="saveProfileBtn">Save</button>
-      <button id="closePopupBtn">Close</button>
+    <div class="message-display" id="message-display">
+        <!-- Messages will appear here -->
     </div>
-  </div>
 
-  <!-- Firebase -->
-  <script type="module">
-    // Import Firebase modules
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, updateDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+    <footer>
+        <div class="input-container">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button class="send-btn" id="send-btn">Send</button>
+        </div>
+    </footer>
 
-    // Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyDFHskUWiyHhZke3KT9kkOtFI_gPsKfiGo",
-      authDomain: "itzhoyoo-f9f7e.firebaseapp.com",
-      databaseURL: "https://itzhoyoo-f9f7e-default-rtdb.firebaseio.com",
-      projectId: "itzhoyoo-f9f7e",
-      storageBucket: "itzhoyoo-f9f7e.appspot.com",
-      messagingSenderId: "1094792075584",
-      appId: "1:1094792075584:web:d49e9c3f899d3cd31082a5",
-      measurementId: "G-LLT6F9WRKH"
-    };
+    <script>
+        document.getElementById('send-btn').addEventListener('click', function() {
+            var messageInput = document.getElementById('message-input');
+            var messageText = messageInput.value.trim();
 
-    // Initialize Firebase and Firestore
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+            if (messageText) {
+                var username = "User123"; // Placeholder for the username
+                var profilePic = "https://via.placeholder.com/150"; // Placeholder for profile image
 
-    // DOM Elements
-    const form = document.getElementById("messageForm");
-    const input = document.getElementById("messageInput");
-    const messagesContainer = document.getElementById("messagesContainer");
-    const profileIcon = document.getElementById("profileIcon");
-    const popupModal = document.getElementById("popupModal");
-    const closePopupBtn = document.getElementById("closePopupBtn");
-    const saveProfileBtn = document.getElementById("saveProfileBtn");
+                // Get current timestamp
+                var timestamp = new Date().toLocaleTimeString();
 
-    // User Data
-    let userData = {
-      profilePic: "https://via.placeholder.com/35",
-      username: "Guest",
-      email: "",
-    };
+                // Placeholder for views (this will later be updated with Firebase data)
+                var views = Math.floor(Math.random() * 100);
 
-    // Open popup when profile icon is clicked
-    profileIcon.addEventListener("click", () => {
-      document.getElementById("profilePicUrl").value = userData.profilePic;
-      document.getElementById("username").value = userData.username;
-      document.getElementById("userEmail").value = userData.email;
-      popupModal.style.display = "flex";
-    });
+                // Create message element
+                var messageElement = document.createElement('div');
+                messageElement.classList.add('message');
 
-    // Close popup
-    closePopupBtn.addEventListener("click", () => {
-      popupModal.style.display = "none";
-    });
+                messageElement.innerHTML = `
+                    <div class="profile-info">
+                        <img src="${profilePic}" alt="Profile Image">
+                        <div class="username">${username}</div>
+                    </div>
+                    <div class="content">
+                        <div class="message-text">${messageText}</div>
+                        <div class="timestamp">${timestamp}</div>
+                        <div class="views">${views} views</div>
+                    </div>
+                `;
 
-    // Save Profile Details
-    saveProfileBtn.addEventListener("click", async () => {
-      userData.profilePic = document.getElementById("profilePicUrl").value;
-      userData.username = document.getElementById("username").value;
-      userData.email = document.getElementById("userEmail").value;
+                // Add message to the message display area
+                document.getElementById('message-display').appendChild(messageElement);
 
-      // Update profile icon
-      profileIcon.style.backgroundImage = `url(${userData.profilePic})`;
+                // Scroll to the bottom to show the new message
+                document.getElementById('message-display').scrollTop = document.getElementById('message-display').scrollHeight;
 
-      // Store in Firebase (you could use an authenticated user id here)
-      await setDoc(doc(db, "users", userData.email), userData);
-
-      popupModal.style.display = "none";
-    });
-
-    // Function to display messages
-    function displayMessage(id, data) {
-      const { username, text, timestamp, views, profilePic } = data;
-
-      const message = document.createElement("div");
-      message.classList.add("message");
-
-      // Profile Section
-      const profileSection = document.createElement("div");
-      profileSection.classList.add("profile-section");
-
-      // Profile Picture
-      const profilePicElement = document.createElement("div");
-      profilePicElement.classList.add("profile-pic");
-      profilePicElement.style.backgroundImage = `url(${profilePic})`;
-
-      // Username
-      const usernameDiv = document.createElement("div");
-      usernameDiv.classList.add("username");
-      usernameDiv.textContent = username;
-
-      profileSection.appendChild(profilePicElement);
-      profileSection.appendChild(usernameDiv);
-
-      // Content Section
-      const content = document.createElement("div");
-      content.classList.add("content");
-      const time = new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      content.innerHTML = `${text} <br><span class="timestamp">${time}</span>`;
-
-      // Views Section
-      const viewsDiv = document.createElement("div");
-      viewsDiv.classList.add("views");
-      viewsDiv.textContent = `Views: ${views}`;
-
-      message.appendChild(profileSection);
-      message.appendChild(content);
-      message.appendChild(viewsDiv);
-
-      messagesContainer.appendChild(message);
-    }
-
-    // Listen for new messages in Firestore
-    const q = query(collection(db, "messages"), orderBy("timestamp", "asc"));
-    onSnapshot(q, (snapshot) => {
-      messagesContainer.innerHTML = "";
-      snapshot.forEach((doc) => {
-        displayMessage(doc.id, doc.data());
-      });
-    });
-
-    // Add new message to Firestore
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const messageText = input.value.trim();
-      if (messageText) {
-        const now = new Date();
-        const newMessage = {
-          username: userData.username,
-          text: messageText,
-          timestamp: now.getTime(),
-          views: 0,
-          profilePic: userData.profilePic,
-        };
-
-        await addDoc(collection(db, "messages"), newMessage);
-        input.value = "";
-      }
-    });
-  </script>
+                // Clear the input field
+                messageInput.value = '';
+            }
+        });
+    </script>
 </body>
 </html>
