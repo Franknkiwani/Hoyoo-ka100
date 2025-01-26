@@ -3,160 +3,492 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberChat</title>
+    <title>Modern Message App</title>
     <style>
-        /* Base styling with WebKit prefixes */
-        body {
-            background-color: #000000; /* Dark black background */
+        * {
             margin: 0;
             padding: 0;
-            -webkit-font-smoothing: antialiased;
-            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #1c1c1c;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
             display: flex;
             flex-direction: column;
-            height: 100vh; /* Make the body full height */
+            height: 100%;
+            width: 100%;
+            max-width: 100%;
+            background: #333;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
         header {
-            position: sticky;
-            top: 0;
-            display: flex;
-            justify-content: space-between; /* Space between left content (logo + text) and right content (profile) */
-            align-items: center; /* Align items vertically in the center */
-            background-color: #1a1a1a; /* Dark gray background */
-            padding: 10px 20px;
-            border-bottom: 1px solid #444; /* Subtle divider */
-            z-index: 1000;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center; /* Align logo and text vertically in the center */
-        }
-
-        header img {
-            height: 40px; /* Small logo height */
-            margin-right: 10px;
-            border-radius: 50%; /* Egg-like shape for the logo */
-            box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff; /* Neon glow effect */
-        }
-
-        header h1 {
-            font-family: 'Orbitron', sans-serif; /* Futuristic font */
-            font-size: 18px;
+            background: #111;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
             text-transform: uppercase;
-            color: #ffffff; /* White text */
-            -webkit-text-stroke: 1px #00ff00; /* Light green outline with thinner stroke */
-            margin: 0;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
         }
 
-        /* Profile picture */
-        .profile-pic {
-            height: 40px; /* Circle size */
-            width: 40px;
-            border-radius: 50%; /* Makes it circular */
-            background-image: url('https://i.ibb.co/RDf3jPX/photo-output.jpg'); /* Replace with your image URL */
+        header .profile-pic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #aaa;
+            background-image: url('https://via.placeholder.com/50');
             background-size: cover;
             background-position: center;
-            border: 2px solid #00ff00; /* Green border */
-            box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00; /* Neon glow */
+            border: 2px solid #0f0;  /* Cool green border */
+            cursor: pointer;
         }
 
-        /* Footer Styles */
-        footer {
-            position: sticky;
-            bottom: 0;
-            background-color: #1a1a1a; /* Dark background for the footer */
-            padding: 20px 0;
-            border-top: 1px solid #444; /* Subtle divider */
-            text-align: center;
-            color: #ffffff; /* White text */
-            z-index: 1000;
-            width: 100%;
-            display: flex;
-            justify-content: space-around; /* Space icons evenly */
-            align-items: center;
-        }
-
-        /* Footer Icons */
-        .footer-icon {
-            color: #00ff00; /* Light green icon color */
-            font-size: 36px; /* Increased size for visibility */
-            transition: transform 0.3s, color 0.3s; /* Hover effect for modern look */
+        .message-container {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #222;
             display: flex;
             flex-direction: column;
+        }
+
+        footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: #111;
+        }
+
+        footer input {
+            width: 80%;
+            padding: 12px;
+            border: 2px solid #444;
+            background: #222;
+            color: #fff;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.7);
+        }
+
+        footer input::placeholder {
+            color: #aaa;
+            font-style: italic;
+        }
+
+        footer input:focus {
+            border-color: #1a73e8;
+            box-shadow: 0 0 15px #1a73e8;
+            background: #333;
+        }
+
+        footer button {
+            width: 15%;
+            padding: 12px;
+            background: linear-gradient(45deg, #ff00ff, #1a73e8);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.7);
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        footer button:hover {
+            background: linear-gradient(45deg, #1a73e8, #ff00ff);
+            transform: scale(1.05);
+        }
+
+        footer button:active {
+            transform: scale(0.95);
+        }
+
+        /* Profile Popup */
+        .profile-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #333;
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 8px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.7);
+            z-index: 1000;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .profile-popup .profile-option {
+            margin: 15px;
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+        }
+
+        .profile-popup input[type="file"] {
+            display: none;
+        }
+
+        .profile-popup .username-input {
+            margin: 10px;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            background: #222;
+            color: white;
+            border: 1px solid #444;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .profile-popup button {
+            margin-top: 15px;
+            padding: 12px;
+            background: linear-gradient(45deg, #ff00ff, #1a73e8);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.7);
+            transition: background 0.3s, transform 0.2s;
+            width: 100%;
+        }
+
+        .profile-popup button:hover {
+            background: linear-gradient(45deg, #1a73e8, #ff00ff);
+            transform: scale(1.05);
+        }
+
+        .profile-popup button:active {
+            transform: scale(0.95);
+        }
+
+        /* Close button for profile popup */
+        .profile-popup .close-btn {
+            background: red;
+            color: white;
+            padding: 8px;
+            margin-top: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .profile-popup .close-btn:hover {
+            background: darkred;
+        }
+
+        /* Fluffy Popup for Non-premium Users */
+        .premium-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #555;
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.7);
+            z-index: 1001;
+            width: 80%;
+            max-width: 350px;
+        }
+
+        .premium-popup button {
+            margin-top: 15px;
+            padding: 12px;
+            background: #ff6666;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s, transform 0.2s;
+            width: 100%;
+        }
+
+        .premium-popup button:hover {
+            background: darkred;
+            transform: scale(1.05);
+        }
+
+        .premium-popup button:active {
+            transform: scale(0.95);
+        }
+      .message-container {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #222;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            background-color: #aaa;
+            background-image: url('https://via.placeholder.com/50');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .message-content {
+            flex-grow: 1;
+            background: #333;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
+            word-wrap: break-word;
+            max-width: 80%;
+        }
+
+        .username-container {
+            display: flex;
             align-items: center;
         }
 
-        .footer-icon:hover {
-            color: #ffffff; /* Change color on hover */
-            transform: scale(1.2); /* Slightly enlarge icon on hover */
+        .username {
+            font-weight: bold;
+            font-size: 16px;
+            margin-right: 10px;
         }
 
-        .footer-icon img {
-            height: 40px; /* Larger icon size */
-            width: 40px;
-            border-radius: 10px; /* Rounded corners for images */
-            margin-bottom: 5px; /* Space between icon and text */
+        .follow-btn {
+            margin-left: 10px;
+            padding: 5px 10px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s ease;
         }
 
-        .custom-icon {
-            height: 40px; /* Larger custom icon size */
-            width: 40px;
-            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOg62tUUhTGeS1iT3NW8AEUQCYcyzqAZ3OpQ&usqp=CAU');
-            background-size: cover;
-            background-position: center;
-            transition: transform 0.3s, filter 0.3s;
+        .follow-btn.following {
+            background: #e600e6;
         }
 
-        .custom-icon:hover {
-            filter: brightness(1.2); /* Brighten on hover */
-            transform: scale(1.2); /* Slightly enlarge on hover */
+        .delete-btn {
+            margin-left: 10px;
+            padding: 5px 10px;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
         }
 
-        .footer-icon-text {
-            color: #00ff00; /* Green text color */
+        .content {
             font-size: 14px;
-            margin-top: 5px; /* Space between icon and text */
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
-    <header>
-        <!-- Left section with logo and text -->
-        <div class="header-left">
-            <img src="https://i.ibb.co/RDf3jPX/photo-output.jpg" alt="CyberChat Logo">
-            <h1>CyberChat</h1>
+
+    <div class="container">
+        <header>
+            Modern Chat
+            <div class="profile-pic" onclick="openProfilePopup()"></div>
+        </header>
+
+        <div class="message-container" id="messageContainer">
+            <!-- Messages will appear here -->
         </div>
 
-        <!-- Profile picture on the right -->
-        <div class="profile-pic"></div>
-    </header>
-
-    <!-- Main content goes here -->
-    <div style="flex-grow: 1;">
-        <!-- Content can be added here -->
+        <footer>
+            <input type="text" id="messageInput" placeholder="Type a message..." />
+            <button id="sendMessageButton">Send</button>
+        </footer>
     </div>
 
-    <!-- Sticky Footer -->
-    <footer>
-        <!-- Home Icon (Custom Image) -->
-        <a href="index.html" class="footer-icon">
-            <div class="custom-icon"></div>
-            <div class="footer-icon-text">HOME</div>
-        </a>
+    <!-- Profile Popup -->
+    <div class="profile-popup" id="profilePopup">
+        <div class="profile-option" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdN_8i6yYNN09SKZRQ-clTVMlu17Y9xh76CQ&usqp=CAU');" onclick="selectProfile(1)"></div>
+        <div class="profile-option" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCoyaYc5R4mi5bKTnPUvcy7yHq50k2eQxQew&usqp=CAU');" onclick="selectProfile(2)"></div>
+        <div class="profile-option" style="background-color: #444;" onclick="selectProfile(3)">
+            <span>Upload</span> <!-- Placeholder for premium users -->
+        </div>
 
-        <!-- Social Media Icon (Picsum Random Image) -->
-        <a href="social.html" class="footer-icon">
-            <img src="https://picsum.photos/200" alt="Social Media Icon">
-            <div class="footer-icon-text">SOCIAL</div>
-        </a>
+        <input type="text" class="username-input" id="usernameInput" placeholder="Enter your username (max 6 chars)" maxlength="6" />
 
-        <!-- Marketplace Icon (Custom Image) -->
-        <a href="marketplace.html" class="footer-icon">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_Pt3_VjTsbHR12Zvx4ir_bl9dCeu16jWnaLhSPBPOw9J3Xckr-oaefABL&s=10" alt="Marketplace Icon">
-            <div class="footer-icon-text">MARKET</div>
-        </a>
-    </footer>
+        <button onclick="saveProfile()">Save</button>
+        <button class="close-btn" onclick="closeProfilePopup()">Close</button>
+    </div>
+
+    <!-- Premium Popup -->
+    <div class="premium-popup" id="premiumPopup">
+        <h3>Upload Profile is for Premium Users Only</h3>
+        <button onclick="closePremiumPopup()">Close</button>
+    </div>
+
+<!-- Firebase Integration -->
+    <script type="module">
+        // Import Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+        import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDFHskUWiyHhZke3KT9kkOtFI_gPsKfiGo",
+            authDomain: "itzhoyoo-f9f7e.firebaseapp.com",
+            databaseURL: "https://itzhoyoo-f9f7e-default-rtdb.firebaseio.com",
+            projectId: "itzhoyoo-f9f7e",
+            storageBucket: "itzhoyoo-f9f7e.appspot.com",
+            messagingSenderId: "1094792075584",
+            appId: "1:1094792075584:web:d49e9c3f899d3cd31082a5",
+            measurementId: "G-LLT6F9WRKH"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        let username = localStorage.getItem('username') || 'Anonymous';
+        let selectedProfile = localStorage.getItem('selectedProfile') || '1';
+
+        // Listen for new messages
+        const messagesRef = ref(database, 'messages');
+        onValue(messagesRef, (snapshot) => {
+            const messages = snapshot.val();
+            const messageContainer = document.getElementById('messageContainer');
+            messageContainer.innerHTML = '';
+
+            for (let key in messages) {
+                const message = messages[key];
+                const messageElement = createMessageElement(message.username, message.profile, message.text, key);
+                messageContainer.appendChild(messageElement);
+            }
+        });
+
+        // Send a message
+        document.getElementById('sendMessageButton').addEventListener('click', () => {
+            const messageText = document.getElementById('messageInput').value.trim();
+            if (messageText) {
+                const newMessageRef = push(messagesRef);
+                set(newMessageRef, {
+                    username,
+                    profile: selectedProfile,
+                    text: messageText
+                });
+                document.getElementById('messageInput').value = '';
+            }
+        });
+
+        // Create a message element
+        function createMessageElement(username, profile, text, messageId) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+
+            const profilePic = document.createElement('div');
+            profilePic.classList.add('profile-pic');
+            if (profile === '1') {
+                profilePic.style.backgroundImage = "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdN_8i6yYNN09SKZRQ-clTVMlu17Y9xh76CQ&usqp=CAU')";
+            } else if (profile === '2') {
+                profilePic.style.backgroundImage = "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCoyaYc5R4mi5bKTnPUvcy7yHq50k2eQxQew&usqp=CAU')";
+            }
+
+            const messageContent = document.createElement('div');
+            messageContent.classList.add('message-content');
+
+            const usernameContainer = document.createElement('div');
+            usernameContainer.classList.add('username-container');
+
+            const usernameElement = document.createElement('div');
+            usernameElement.classList.add('username');
+            usernameElement.textContent = username;
+
+            usernameContainer.appendChild(usernameElement);
+            messageContent.appendChild(usernameContainer);
+
+            const contentElement = document.createElement('div');
+            contentElement.classList.add('content');
+            contentElement.textContent = text;
+
+            messageContent.appendChild(contentElement);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('delete-btn');
+            deleteButton.textContent = 'Delete';
+            deleteButton.onclick = () => deleteMessage(messageId);
+
+            messageElement.appendChild(profilePic);
+            messageElement.appendChild(messageContent);
+            messageElement.appendChild(deleteButton);
+
+            return messageElement;
+        }
+
+        // Delete a message
+        function deleteMessage(messageId) {
+            const messageRef = ref(database, `messages/${messageId}`);
+            set(messageRef, null);
+        }
+
+        // Save profile
+        function saveProfile() {
+            const usernameInput = document.getElementById('usernameInput').value.trim();
+            if (!usernameInput || usernameInput.length > 6) {
+                alert('Please enter a valid username (6 characters max).');
+                return;
+            }
+
+            username = usernameInput;
+            localStorage.setItem('username', username);
+            localStorage.setItem('selectedProfile', selectedProfile);
+            alert('Profile saved!');
+            closeProfilePopup();
+        }
+
+        // Open/close premium popup
+        function openPremiumPopup() {
+            document.getElementById('premiumPopup').style.display = 'block';
+        }
+
+        function closePremiumPopup() {
+            document.getElementById('premiumPopup').style.display = 'none';
+        }
+    </script>
+
 </body>
 </html>
