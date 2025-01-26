@@ -17,60 +17,6 @@
             flex-direction: column;
         }
 
-        /* Sticky Header */
-        header {
-            background-color: #1a1a1a;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            box-shadow: 0 4px 10px rgba(0, 255, 255, 0.2);
-            -webkit-box-shadow: 0 4px 10px rgba(0, 255, 255, 0.2); /* For Safari */
-        }
-
-        .menu-icon {
-            width: 30px;
-            height: 25px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .menu-icon div {
-            width: 30px;
-            height: 5px;
-            background-color: #00ff99;
-            border-radius: 5px;
-        }
-
-        .menu-icon div:hover {
-            background-color: #ff0080;
-        }
-
-        /* Profile circle container */
-        .profile-container {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 3px solid #00ff99;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .profile-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
         /* Chat container styling */
         .chat-container {
             flex-grow: 1;
@@ -208,19 +154,6 @@
     </style>
 </head>
 <body>
-
-<header>
-    <div class="menu-icon">
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
-
-    <!-- Clickable Profile Container -->
-    <a href="/profile" class="profile-container">
-        <img src="https://via.placeholder.com/150" alt="Profile">
-    </a>
-</header>
 
 <!-- Chat Container -->
 <main class="chat-container" id="chatContainer">
@@ -394,7 +327,6 @@
   // Initialize the chat by fetching messages
   window.addEventListener('load', fetchMessages);
 </script>
-
 
 </body>
 </html>
