@@ -3,330 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyberpunk Chat App</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet"> <!-- Bold modern font -->
+    <title>CyberChat</title>
     <style>
+        /* Base styling with WebKit prefixes */
         body {
-            font-family: 'Poppins', sans-serif;
+            background-color: #000000; /* Dark black background */
             margin: 0;
             padding: 0;
-            background-color: #111;
-            color: #fff;
-            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: transparent;
             display: flex;
             flex-direction: column;
+            height: 100vh; /* Make the body full height */
         }
 
-        /* Chat container styling */
-        .chat-container {
-            flex-grow: 1;
+        header {
+            position: sticky;
+            top: 0;
             display: flex;
-            flex-direction: column;
-            padding: 20px;
-            overflow-y: auto;
-            max-height: calc(100vh - 120px);
+            justify-content: space-between; /* Space between left content (logo + text) and right content (profile) */
+            align-items: center; /* Align items vertically in the center */
+            background-color: #1a1a1a; /* Dark gray background */
+            padding: 10px 20px;
+            border-bottom: 1px solid #444; /* Subtle divider */
+            z-index: 1000;
         }
 
-        .message {
-            background-color: #333;
-            padding: 10px;
-            margin-bottom: 20px; /* Increased gap between messages */
-            border-radius: 10px;
-            max-width: 60%;
-            color: #fff;
-            position: relative;
+        .header-left {
             display: flex;
-            align-items: flex-start;
+            align-items: center; /* Align logo and text vertically in the center */
         }
 
-        .message-user {
-            align-self: flex-end;
-            background-color: #007bff; /* Blue for user messages */
-        }
-
-        .message-system {
-            align-self: flex-start;
-            background-color: #00ff99;
-        }
-
-        .message .profile-pic {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+        header img {
+            height: 40px; /* Small logo height */
             margin-right: 10px;
-            border: 2px solid #00ff99;
-            overflow: hidden;
+            border-radius: 50%; /* Egg-like shape for the logo */
+            box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff; /* Neon glow effect */
         }
 
-        .message .profile-pic img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        header h1 {
+            font-family: 'Orbitron', sans-serif; /* Futuristic font */
+            font-size: 18px;
+            text-transform: uppercase;
+            color: #ffffff; /* White text */
+            -webkit-text-stroke: 1px #00ff00; /* Light green outline with thinner stroke */
+            margin: 0;
         }
 
-        .message .content {
-            max-width: 80%;
+        /* Profile picture */
+        .profile-pic {
+            height: 40px; /* Circle size */
+            width: 40px;
+            border-radius: 50%; /* Makes it circular */
+            background-image: url('https://i.ibb.co/RDf3jPX/photo-output.jpg'); /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #00ff00; /* Green border */
+            box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00; /* Neon glow */
         }
 
-        .message .name {
-            font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .message .ticks {
-            position: absolute;
-            bottom: -18px;
-            right: 10px;
-            font-size: 12px;
-            color: #fff;
-        }
-
-        .message .ticks .tick {
-            margin-right: 5px;
-        }
-
-        .message .views {
-            position: absolute;
-            bottom: -18px;
-            right: 40px;
-            font-size: 12px;
-            color: #fff;
-        }
-
-        /* Footer styling for message input */
+        /* Footer Styles */
         footer {
-            background-color: #1a1a1a;
-            padding: 10px;
             position: sticky;
             bottom: 0;
+            background-color: #1a1a1a; /* Dark background for the footer */
+            padding: 20px 0;
+            border-top: 1px solid #444; /* Subtle divider */
+            text-align: center;
+            color: #ffffff; /* White text */
+            z-index: 1000;
             width: 100%;
-            z-index: 5;
             display: flex;
-            justify-content: center;
+            justify-content: space-around; /* Space icons evenly */
             align-items: center;
-            box-shadow: 0 -4px 10px rgba(0, 255, 255, 0.2);
-            -webkit-box-shadow: 0 -4px 10px rgba(0, 255, 255, 0.2); /* For Safari */
         }
 
-        .send-message-container {
+        /* Footer Icons */
+        .footer-icon {
+            color: #00ff00; /* Light green icon color */
+            font-size: 36px; /* Increased size for visibility */
+            transition: transform 0.3s, color 0.3s; /* Hover effect for modern look */
             display: flex;
+            flex-direction: column;
             align-items: center;
-            width: 90%;
-            max-width: 600px;
-            border-radius: 30px;
-            background-color: #333;
-            padding: 10px;
         }
 
-        .send-message-container input {
-            flex-grow: 1;
-            padding: 12px;
-            margin-right: 10px;
-            background-color: #222;
-            border: none;
-            border-radius: 25px;
-            color: #fff;
-            font-size: 16px;
-            outline: none;
-            transition: background-color 0.3s ease;
+        .footer-icon:hover {
+            color: #ffffff; /* Change color on hover */
+            transform: scale(1.2); /* Slightly enlarge icon on hover */
         }
 
-        .send-message-container input:focus {
-            background-color: #444;
+        .footer-icon img {
+            height: 40px; /* Larger icon size */
+            width: 40px;
+            border-radius: 10px; /* Rounded corners for images */
+            margin-bottom: 5px; /* Space between icon and text */
         }
 
-        .send-message-container button {
-            background-color: #00ff99;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+        .custom-icon {
+            height: 40px; /* Larger custom icon size */
+            width: 40px;
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOg62tUUhTGeS1iT3NW8AEUQCYcyzqAZ3OpQ&usqp=CAU');
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.3s, filter 0.3s;
         }
 
-        .send-message-container button:hover {
-            background-color: #009966;
+        .custom-icon:hover {
+            filter: brightness(1.2); /* Brighten on hover */
+            transform: scale(1.2); /* Slightly enlarge on hover */
         }
 
+        .footer-icon-text {
+            color: #00ff00; /* Green text color */
+            font-size: 14px;
+            margin-top: 5px; /* Space between icon and text */
+        }
     </style>
 </head>
 <body>
+    <header>
+        <!-- Left section with logo and text -->
+        <div class="header-left">
+            <img src="https://i.ibb.co/RDf3jPX/photo-output.jpg" alt="CyberChat Logo">
+            <h1>CyberChat</h1>
+        </div>
 
-<!-- Chat Container -->
-<main class="chat-container" id="chatContainer">
-    <!-- Example chat messages will go here -->
-    <div class="message message-user">
-        <div class="profile-pic">
-            <img src="https://via.placeholder.com/150" alt="User">
-        </div>
-        <div class="content">
-            <div class="name">User Name</div>
-            Hey, how's it going?
-            <div class="ticks">
-                <span class="tick">✓</span><span class="tick">✓</span>
-            </div>
-            <div class="views">Views: 0</div>
-        </div>
+        <!-- Profile picture on the right -->
+        <div class="profile-pic"></div>
+    </header>
+
+    <!-- Main content goes here -->
+    <div style="flex-grow: 1;">
+        <!-- Content can be added here -->
     </div>
-    <div class="message message-system">
-        <div class="profile-pic">
-            <img src="https://via.placeholder.com/150" alt="System">
-        </div>
-        <div class="content">
-            <div class="name">System Name</div>
-            I'm doing great, thanks! How about you?
-            <div class="ticks">
-                <span class="tick">✓</span>
-            </div>
-            <div class="views">Views: 0</div>
-        </div>
-    </div>
-</main>
 
-<!-- Clean, Fluffy Send Message Input and Button in Footer -->
-<footer>
-    <div class="send-message-container">
-        <input type="text" placeholder="Type a message..." id="messageInput">
-        <button id="sendButton">Send</button>
-    </div>
-</footer>
+    <!-- Sticky Footer -->
+    <footer>
+        <!-- Home Icon (Custom Image) -->
+        <a href="index.html" class="footer-icon">
+            <div class="custom-icon"></div>
+            <div class="footer-icon-text">HOME</div>
+        </a>
 
-<!-- Firebase SDK -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
-  import { getFirestore, doc, setDoc, getDoc, updateDoc, increment, getDocs, collection } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+        <!-- Social Media Icon (Picsum Random Image) -->
+        <a href="social.html" class="footer-icon">
+            <img src="https://picsum.photos/200" alt="Social Media Icon">
+            <div class="footer-icon-text">SOCIAL</div>
+        </a>
 
-  // Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyDFHskUWiyHhZke3KT9kkOtFI_gPsKfiGo",
-    authDomain: "itzhoyoo-f9f7e.firebaseapp.com",
-    databaseURL: "https://itzhoyoo-f9f7e-default-rtdb.firebaseio.com",
-    projectId: "itzhoyoo-f9f7e",
-    storageBucket: "itzhoyoo-f9f7e.firebasestorage.app",
-    messagingSenderId: "1094792075584",
-    appId: "1:1094792075584:web:d49e9c3f899d3cd31082a5",
-    measurementId: "G-LLT6F9WRKH"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const db = getFirestore(app);
-
-  // Chat container elements
-  const chatContainer = document.getElementById('chatContainer');
-  const messageInput = document.getElementById('messageInput');
-  const sendButton = document.getElementById('sendButton');
-
-  // Track seen messages
-  const seenMessages = JSON.parse(localStorage.getItem('seenMessages')) || [];
-
-  // Send message function
-  sendButton.addEventListener('click', () => {
-    const messageText = messageInput.value.trim();
-    if (messageText) {
-      const messageId = `message-${Date.now()}`; // Unique message ID
-
-      // Save message to Firebase
-      sendMessage(messageId, messageText, "User");
-
-      // Create and append message element
-      const newMessage = document.createElement('div');
-      newMessage.classList.add('message', 'message-user');
-      newMessage.dataset.messageId = messageId;
-
-      newMessage.innerHTML = `
-        <div class="profile-pic">
-          <img src="https://via.placeholder.com/150" alt="User">
-        </div>
-        <div class="content">
-          <div class="name">User</div>
-          ${messageText}
-          <div class="ticks">
-            <span class="tick">✓</span><span class="tick">✓</span>
-          </div>
-          <div class="views">Views: 0</div>
-        </div>
-      `;
-      chatContainer.appendChild(newMessage);
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-
-      // Clear the input field
-      messageInput.value = '';
-    }
-  });
-
-  // Send message to Firestore
-  async function sendMessage(messageId, messageText, sender) {
-    try {
-      await setDoc(doc(db, "messages", messageId), {
-        text: messageText,
-        sender: sender,
-        viewCount: 0
-      });
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
-  }
-
-  // Increment view count for a message
-  async function incrementViewCount(messageId) {
-    const messageRef = doc(db, "messages", messageId);
-    const messageSnap = await getDoc(messageRef);
-
-    if (messageSnap.exists()) {
-      const messageData = messageSnap.data();
-      if (!seenMessages.includes(messageId)) {
-        // Update view count in Firestore
-        await updateDoc(messageRef, {
-          viewCount: increment(1)
-        });
-
-        // Add to localStorage to prevent double-counting views
-        seenMessages.push(messageId);
-        localStorage.setItem('seenMessages', JSON.stringify(seenMessages));
-      }
-    }
-  }
-
-  // Fetch messages from Firestore
-  async function fetchMessages() {
-    const querySnapshot = await getDocs(collection(db, "messages"));
-    querySnapshot.forEach((doc) => {
-      const message = doc.data();
-      const messageId = doc.id;
-
-      // Render message
-      const messageElement = document.createElement('div');
-      messageElement.classList.add('message', 'message-system');
-      messageElement.dataset.messageId = messageId;
-      messageElement.innerHTML = `
-        <div class="profile-pic">
-          <img src="https://via.placeholder.com/150" alt="System">
-        </div>
-        <div class="content">
-          <div class="name">${message.sender}</div>
-          ${message.text}
-          <div class="ticks">
-            <span class="tick">✓</span>
-          </div>
-          <div class="views">Views: ${message.viewCount}</div>
-        </div>
-      `;
-      chatContainer.appendChild(messageElement);
-
-      // Increment view count for unseen messages
-      incrementViewCount(messageId);
-    });
-  }
-
-  // Initialize the chat by fetching messages
-  window.addEventListener('load', fetchMessages);
-</script>
-
+        <!-- Marketplace Icon (Custom Image) -->
+        <a href="marketplace.html" class="footer-icon">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_Pt3_VjTsbHR12Zvx4ir_bl9dCeu16jWnaLhSPBPOw9J3Xckr-oaefABL&s=10" alt="Marketplace Icon">
+            <div class="footer-icon-text">MARKET</div>
+        </a>
+    </footer>
 </body>
 </html>
