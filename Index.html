@@ -1,494 +1,410 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Message App</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body, html {
-            height: 100%;
-            width: 100%;
-            font-family: Arial, sans-serif;
-            background-color: #1c1c1c;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            width: 100%;
-            max-width: 100%;
-            background: #333;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        header {
-            background: #111;
-            padding: 20px;
-            text-align: center;
-            font-size: 24px;
-            text-transform: uppercase;
-            color: #fff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-        }
-
-        header .profile-pic {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: #aaa;
-            background-image: url('https://via.placeholder.com/50');
-            background-size: cover;
-            background-position: center;
-            border: 2px solid #0f0;  /* Cool green border */
-            cursor: pointer;
-        }
-
-        .message-container {
-            flex-grow: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background: #222;
-            display: flex;
-            flex-direction: column;
-        }
-
-        footer {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            background: #111;
-        }
-
-        footer input {
-            width: 80%;
-            padding: 12px;
-            border: 2px solid #444;
-            background: #222;
-            color: #fff;
-            border-radius: 5px;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(255, 0, 255, 0.7);
-        }
-
-        footer input::placeholder {
-            color: #aaa;
-            font-style: italic;
-        }
-
-        footer input:focus {
-            border-color: #1a73e8;
-            box-shadow: 0 0 15px #1a73e8;
-            background: #333;
-        }
-
-        footer button {
-            width: 15%;
-            padding: 12px;
-            background: linear-gradient(45deg, #ff00ff, #1a73e8);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            box-shadow: 0 0 10px rgba(255, 0, 255, 0.7);
-            transition: background 0.3s, transform 0.2s;
-        }
-
-        footer button:hover {
-            background: linear-gradient(45deg, #1a73e8, #ff00ff);
-            transform: scale(1.05);
-        }
-
-        footer button:active {
-            transform: scale(0.95);
-        }
-
-        /* Profile Popup */
-        .profile-popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #333;
-            border: 1px solid #eee;
-            padding: 20px;
-            border-radius: 8px;
-            color: white;
-            text-align: center;
-            box-shadow: 0 0 15px rgba(255, 0, 255, 0.7);
-            z-index: 1000;
-            width: 90%;
-            max-width: 400px;
-        }
-
-        .profile-popup .profile-option {
-            margin: 15px;
-            display: inline-block;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-size: cover;
-            background-position: center;
-            cursor: pointer;
-        }
-
-        .profile-popup input[type="file"] {
-            display: none;
-        }
-
-        .profile-popup .username-input {
-            margin: 10px;
-            padding: 10px;
-            width: 100%;
-            border-radius: 5px;
-            background: #222;
-            color: white;
-            border: 1px solid #444;
-            font-size: 16px;
-            outline: none;
-        }
-
-        .profile-popup button {
-            margin-top: 15px;
-            padding: 12px;
-            background: linear-gradient(45deg, #ff00ff, #1a73e8);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            box-shadow: 0 0 10px rgba(255, 0, 255, 0.7);
-            transition: background 0.3s, transform 0.2s;
-            width: 100%;
-        }
-
-        .profile-popup button:hover {
-            background: linear-gradient(45deg, #1a73e8, #ff00ff);
-            transform: scale(1.05);
-        }
-
-        .profile-popup button:active {
-            transform: scale(0.95);
-        }
-
-        /* Close button for profile popup */
-        .profile-popup .close-btn {
-            background: red;
-            color: white;
-            padding: 8px;
-            margin-top: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .profile-popup .close-btn:hover {
-            background: darkred;
-        }
-
-        /* Fluffy Popup for Non-premium Users */
-        .premium-popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #555;
-            padding: 20px;
-            border-radius: 15px;
-            color: white;
-            text-align: center;
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.7);
-            z-index: 1001;
-            width: 80%;
-            max-width: 350px;
-        }
-
-        .premium-popup button {
-            margin-top: 15px;
-            padding: 12px;
-            background: #ff6666;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s, transform 0.2s;
-            width: 100%;
-        }
-
-        .premium-popup button:hover {
-            background: darkred;
-            transform: scale(1.05);
-        }
-
-        .premium-popup button:active {
-            transform: scale(0.95);
-        }
-      .message-container {
-            flex-grow: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background: #222;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .message {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: flex-start;
-            width: 100%;
-        }
-
-        .profile-pic {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 15px;
-            background-color: #aaa;
-            background-image: url('https://via.placeholder.com/50');
-            background-size: cover;
-            background-position: center;
-        }
-
-        .message-content {
-            flex-grow: 1;
-            background: #333;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
-            word-wrap: break-word;
-            max-width: 80%;
-        }
-
-        .username-container {
-            display: flex;
-            align-items: center;
-        }
-
-        .username {
-            font-weight: bold;
-            font-size: 16px;
-            margin-right: 10px;
-        }
-
-        .follow-btn {
-            margin-left: 10px;
-            padding: 5px 10px;
-            background: #1a73e8;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: background 0.3s ease;
-        }
-
-        .follow-btn.following {
-            background: #e600e6;
-        }
-
-        .delete-btn {
-            margin-left: 10px;
-            padding: 5px 10px;
-            background: red;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .content {
-            font-size: 14px;
-            margin-top: 5px;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <header>
-            Modern Chat
-            <div class="profile-pic" onclick="openProfilePopup()"></div>
-        </header>
-
-        <div class="message-container" id="messageContainer">
-            <!-- Messages will appear here -->
-        </div>
-
-        <footer>
-            <input type="text" id="messageInput" placeholder="Type a message..." />
-            <button id="sendMessageButton">Send</button>
-        </footer>
-    </div>
-
-    <!-- Profile Popup -->
-    <div class="profile-popup" id="profilePopup">
-        <div class="profile-option" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdN_8i6yYNN09SKZRQ-clTVMlu17Y9xh76CQ&usqp=CAU');" onclick="selectProfile(1)"></div>
-        <div class="profile-option" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCoyaYc5R4mi5bKTnPUvcy7yHq50k2eQxQew&usqp=CAU');" onclick="selectProfile(2)"></div>
-        <div class="profile-option" style="background-color: #444;" onclick="selectProfile(3)">
-            <span>Upload</span> <!-- Placeholder for premium users -->
-        </div>
-
-        <input type="text" class="username-input" id="usernameInput" placeholder="Enter your username (max 6 chars)" maxlength="6" />
-
-        <button onclick="saveProfile()">Save</button>
-        <button class="close-btn" onclick="closeProfilePopup()">Close</button>
-    </div>
-
-    <!-- Premium Popup -->
-    <div class="premium-popup" id="premiumPopup">
-        <h3>Upload Profile is for Premium Users Only</h3>
-        <button onclick="closePremiumPopup()">Close</button>
-    </div>
-
-<!-- Firebase Integration -->
-    <script type="module">
-        // Import Firebase SDKs
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-        import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
-
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDFHskUWiyHhZke3KT9kkOtFI_gPsKfiGo",
-            authDomain: "itzhoyoo-f9f7e.firebaseapp.com",
-            databaseURL: "https://itzhoyoo-f9f7e-default-rtdb.firebaseio.com",
-            projectId: "itzhoyoo-f9f7e",
-            storageBucket: "itzhoyoo-f9f7e.appspot.com",
-            messagingSenderId: "1094792075584",
-            appId: "1:1094792075584:web:d49e9c3f899d3cd31082a5",
-            measurementId: "G-LLT6F9WRKH"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-
-        let username = localStorage.getItem('username') || 'Anonymous';
-        let selectedProfile = localStorage.getItem('selectedProfile') || '1';
-
-        // Listen for new messages
-        const messagesRef = ref(database, 'messages');
-        onValue(messagesRef, (snapshot) => {
-            const messages = snapshot.val();
-            const messageContainer = document.getElementById('messageContainer');
-            messageContainer.innerHTML = '';
-
-            for (let key in messages) {
-                const message = messages[key];
-                const messageElement = createMessageElement(message.username, message.profile, message.text, key);
-                messageContainer.appendChild(messageElement);
-            }
-        });
-
-        // Send a message
-        document.getElementById('sendMessageButton').addEventListener('click', () => {
-            const messageText = document.getElementById('messageInput').value.trim();
-            if (messageText) {
-                const newMessageRef = push(messagesRef);
-                set(newMessageRef, {
-                    username,
-                    profile: selectedProfile,
-                    text: messageText
-                });
-                document.getElementById('messageInput').value = '';
-            }
-        });
-
-        // Create a message element
-        function createMessageElement(username, profile, text, messageId) {
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message');
-
-            const profilePic = document.createElement('div');
-            profilePic.classList.add('profile-pic');
-            if (profile === '1') {
-                profilePic.style.backgroundImage = "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdN_8i6yYNN09SKZRQ-clTVMlu17Y9xh76CQ&usqp=CAU')";
-            } else if (profile === '2') {
-                profilePic.style.backgroundImage = "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCoyaYc5R4mi5bKTnPUvcy7yHq50k2eQxQew&usqp=CAU')";
-            }
-
-            const messageContent = document.createElement('div');
-            messageContent.classList.add('message-content');
-
-            const usernameContainer = document.createElement('div');
-            usernameContainer.classList.add('username-container');
-
-            const usernameElement = document.createElement('div');
-            usernameElement.classList.add('username');
-            usernameElement.textContent = username;
-
-            usernameContainer.appendChild(usernameElement);
-            messageContent.appendChild(usernameContainer);
-
-            const contentElement = document.createElement('div');
-            contentElement.classList.add('content');
-            contentElement.textContent = text;
-
-            messageContent.appendChild(contentElement);
-
-            const deleteButton = document.createElement('button');
-            deleteButton.classList.add('delete-btn');
-            deleteButton.textContent = 'Delete';
-            deleteButton.onclick = () => deleteMessage(messageId);
-
-            messageElement.appendChild(profilePic);
-            messageElement.appendChild(messageContent);
-            messageElement.appendChild(deleteButton);
-
-            return messageElement;
-        }
-
-        // Delete a message
-        function deleteMessage(messageId) {
-            const messageRef = ref(database, `messages/${messageId}`);
-            set(messageRef, null);
-        }
-
-        // Save profile
-        function saveProfile() {
-            const usernameInput = document.getElementById('usernameInput').value.trim();
-            if (!usernameInput || usernameInput.length > 6) {
-                alert('Please enter a valid username (6 characters max).');
-                return;
-            }
-
-            username = usernameInput;
-            localStorage.setItem('username', username);
-            localStorage.setItem('selectedProfile', selectedProfile);
-            alert('Profile saved!');
-            closeProfilePopup();
-        }
-
-        // Open/close premium popup
-        function openPremiumPopup() {
-            document.getElementById('premiumPopup').style.display = 'block';
-        }
-
-        function closePremiumPopup() {
-            document.getElementById('premiumPopup').style.display = 'none';
-        }
-    </script>
-
-</body>
+<html lang="en">  
+<head>  
+  <meta charset="UTF-8" />  
+  <meta name="viewport" content="width=device-width, initial-scale=1" />  
+  <title>Tripp Murahwa</title>  
+  <style>  
+    :root {  
+      --bg: #0f0f0f;  
+      --text: #ffffff;  
+      --neon-color: cyan;  
+    }  body {  
+  margin: 0;  
+  background-color: var(--bg);  
+  color: var(--text);  
+  font-family: 'Segoe UI', sans-serif;  
+  transition: background 0.3s, color 0.3s;  
+  user-select: none;  
+}  
+
+header {  
+  display: flex;  
+  justify-content: space-between;  
+  align-items: center;  
+  padding: 10px 25px;  
+  background-color: #111;  
+  border-bottom: 2px solid var(--neon-color);  
+  box-shadow: 0 0 10px var(--neon-color);  
+}  
+
+header h1 {  
+  font-size: 1.3rem;  
+  color: var(--neon-color);  
+  margin: 0;  
+}  
+
+.toggle-switch {  
+  display: flex;  
+  align-items: center;  
+  gap: 10px;  
+}  
+
+.toggle-switch input[type="checkbox"] {  
+  width: 45px;  
+  height: 22px;  
+  background: #555;  
+  appearance: none;  
+  border-radius: 25px;  
+  position: relative;  
+  cursor: pointer;  
+  transition: background 0.3s;  
+}  
+
+.toggle-switch input[type="checkbox"]::before {  
+  content: "";  
+  position: absolute;  
+  width: 20px;  
+  height: 20px;  
+  background: white;  
+  border-radius: 50%;  
+  top: 1px;  
+  left: 1px;  
+  transition: 0.3s;  
+}  
+
+.toggle-switch input[type="checkbox"]:checked {  
+  background: var(--neon-color);  
+}  
+
+.toggle-switch input[type="checkbox"]:checked::before {  
+  left: 23px;  
+}  
+
+.socials {  
+  display: flex;  
+  justify-content: center;  
+  gap: 40px;  
+  margin: 30px 0;  
+  flex-wrap: wrap;  
+}  
+
+.social {  
+  text-align: center;  
+}  
+
+.social img {  
+  width: 70px;  
+  height: 70px;  
+  border-radius: 50%;  
+  border: 2px solid var(--neon-color);  
+  box-shadow: 0 0 10px var(--neon-color);  
+  margin-bottom: 10px;  
+}  
+
+.social button {  
+  background-color: transparent;  
+  border: 2px solid var(--neon-color);  
+  color: var(--neon-color);  
+  padding: 6px 16px;  
+  font-size: 0.9rem;  
+  border-radius: 20px;  
+  cursor: pointer;  
+  transition: all 0.3s ease;  
+  box-shadow: 0 0 8px var(--neon-color);  
+}  
+
+.social button:hover {  
+  background-color: var(--neon-color);  
+  color: #000;  
+  box-shadow: 0 0 20px var(--neon-color);  
+}  
+
+.hero-clean {  
+  width: 100%;  
+  height: 350px;  
+  overflow: hidden;  
+  border-bottom: 4px solid var(--neon-color);  
+  box-shadow: 0 0 20px var(--neon-color);  
+}  
+
+.hero-clean img {  
+  width: 100%;  
+  height: 100%;  
+  object-fit: cover;  
+  display: block;  
+}  
+
+.hero-text-box {  
+  text-align: center;  
+  padding: 30px 20px;  
+}  
+
+.hero-text-box h1 {  
+  font-size: 2rem;  
+  color: var(--neon-color);  
+  text-shadow: 0 0 10px var(--neon-color);  
+  margin-bottom: 20px;  
+}  
+
+.cta-button {  
+  display: inline-block;  
+  padding: 12px 28px;  
+  background-color: var(--neon-color);  
+  color: #000;  
+  font-weight: bold;  
+  border: none;  
+  border-radius: 30px;  
+  text-decoration: none;  
+  font-size: 1rem;  
+  box-shadow: 0 0 15px var(--neon-color);  
+  transition: all 0.3s ease;  
+  animation: pulse 2s infinite;  
+}  
+
+.cta-button:hover {  
+  background-color: #000;  
+  color: var(--neon-color);  
+  box-shadow: 0 0 25px var(--neon-color);  
+}  
+
+@keyframes pulse {  
+  0% { transform: scale(1); box-shadow: 0 0 10px var(--neon-color); }  
+  50% { transform: scale(1.05); box-shadow: 0 0 25px var(--neon-color); }  
+  100% { transform: scale(1); box-shadow: 0 0 10px var(--neon-color); }  
+}  
+.socials {
+
+display: flex;
+justify-content: center;
+gap: 25px;
+margin: 30px 0;
+flex-wrap: wrap;
+}
+
+.social {
+text-align: center;
+width: 100px;
+}
+
+.social img {
+width: 60px;
+height: 60px;
+border-radius: 50%;
+border: 2px solid var(--neon-color);
+box-shadow: 0 0 8px var(--neon-color);
+margin-bottom: 8px;
+}
+
+.social-name {
+margin-bottom: 6px;
+font-size: 0.85rem;
+color: var(--neon-color);
+}
+
+.social button {
+font-size: 0.75rem;
+padding: 4px 10px;
+border-radius: 15px;
+border: 1px solid var(--neon-color);
+background: transparent;
+color: var(--neon-color);
+cursor: pointer;
+transition: 0.2s;
+}
+
+.social button:hover {
+background: var(--neon-color);
+color: black;
+box-shadow: 0 0 10px var(--neon-color);
+}
+#notifications {
+padding: 30px 20px;
+border-top: 2px solid var(--neon-color);
+box-shadow: 0 0 20px var(--neon-color);
+margin-top: 40px;
+}
+
+#notifications h2 {
+text-align: center;
+color: var(--neon-color);
+margin-bottom: 20px;
+}
+
+.notif-list {
+display: flex;
+flex-direction: column;
+gap: 15px;
+max-height: 300px;
+overflow-y: auto;
+padding-right: 10px;
+}
+
+.notif {
+background: #111;
+border: 1px solid var(--neon-color);
+border-left: 5px solid var(--neon-color);
+padding: 15px;
+border-radius: 8px;
+box-shadow: 0 0 10px var(--neon-color);
+animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+#loadingScreen {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeOut 1s ease 1s forwards;
+}
+
+.loader-glow {
+  width: 80px;
+  height: 80px;
+  border: 4px solid var(--neon-color);
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite, pulseGlow 1.5s ease-in-out infinite;
+  box-shadow: 0 0 20px var(--neon-color);
+}
+
+#loadingScreen p {
+  margin-top: 20px;
+  color: var(--neon-color);
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-shadow: 0 0 8px var(--neon-color);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 15px var(--neon-color); }
+  50% { box-shadow: 0 0 30px var(--neon-color); }
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; visibility: hidden; }
+}
+</style>
+
+</head>  
+<body>  
+<header>  
+    <h1>Tripp Murahwa</h1>  
+    <div class="toggle-switch">  
+      <label for="vegasToggle">Tripp mode</label>  
+      <input type="checkbox" id="vegasToggle">  
+    </div>  
+  </header> 
+  <div class="socials">  
+  <div class="social">  
+    <img src="https://i.ibb.co/BKZtqYJC/FB-IMG-1742801462584.jpg" alt="Facebook">  
+    <button onclick="location.href='https://www.facebook.com/share/16KF3jPUeE/'">Facebook</button>  
+  </div>  
+  <div class="social">  
+    <img src="https://i.ibb.co/BKZtqYJC/FB-IMG-1742801462584.jpg" alt="Instagram">  
+    <button onclick="location.href='https://www.instagram.com/sfisomphephethi'">Instagram</button>  
+  </div>  
+  <div class="social">  
+    <img src="https://i.ibb.co/TMBCDM3D/In-Shot-20250324-085134940.jpg" alt="BandLab">  
+    <button onclick="location.href='https://www.bandlab.com/trippswagger/'">BandLab</button>  
+  </div>  
+</div>
+  </div>   
+  <div class="hero-clean">  
+    <img src="https://i.ibb.co/TMBCDM3D/In-Shot-20250324-085134940.jpg" alt="Tripp Hero" />  
+  </div>    <div class="hero-text-box">  
+    <h1>Tripp Murahwa Official</h1>  
+    <a href="music.html" class="cta-button">Listen Now</a>  
+  </div>  
+<div id="notifications">  
+  <h2>Latest Updates</h2>  
+  <div class="notif-list" id="notifList">Loading notifications...</div>  
+</div> 
+<!-- Beautiful Loading Screen -->
+<div id="loadingScreen">
+  <div class="loader-glow"></div>
+  <p>Loading Tripp Murahwa...</p>
+</div>
+   <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDFHskUWiyHhZke3KT9kkOtFI_gPsKfiGo",
+    authDomain: "itzhoyoo-f9f7e.firebaseapp.com",
+    databaseURL: "https://itzhoyoo-f9f7e-default-rtdb.firebaseio.com",
+    projectId: "itzhoyoo-f9f7e",
+    storageBucket: "itzhoyoo-f9f7e.appspot.com",
+    messagingSenderId: "1094792075584",
+    appId: "1:1094792075584:web:d49e9c3f899d3cd31082a5",
+    measurementId: "G-LLT6F9WRKH"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // Reference to your trippsnotification node
+  const notifRef = ref(db, 'trippsnotification');
+
+  // Make sure you have this div somewhere in your HTML:
+  // <div id="notifList"></div>
+  const notifList = document.getElementById('notifList');
+
+  onValue(notifRef, (snapshot) => {
+    notifList.innerHTML = '';
+    const data = snapshot.val();
+    if (data) {
+      // Sort notifications by timestamp descending
+      const entries = Object.entries(data).sort((a, b) => b[1].timestamp - a[1].timestamp);
+      entries.forEach(([id, notif]) => {
+        const div = document.createElement('div');
+        div.className = 'notif';
+        div.textContent = notif.message;
+        notifList.appendChild(div);
+      });
+    } else {
+      notifList.innerHTML = '<div class="notif">No notifications yet.</div>';
+    }
+  });
+    const toggle = document.getElementById('vegasToggle');  
+    const root = document.documentElement;  
+    let vegasInterval = null;  
+    const vegasColors = ['cyan', 'lightgreen', 'yellow', 'hotpink'];  const setNeonColor = (color) => {  
+  root.style.setProperty('--neon-color', color);  
+};  
+
+const startVegas = () => {  
+  let index = 0;  
+  vegasInterval = setInterval(() => {  
+    setNeonColor(vegasColors[index % vegasColors.length]);  
+    index++;  
+  }, 1000);  
+};  
+
+const stopVegas = () => {  
+  clearInterval(vegasInterval);  
+  setNeonColor('cyan');  
+};  
+
+toggle.addEventListener('change', () => {  
+  const isChecked = toggle.checked;  
+  localStorage.setItem('vegasMode', isChecked);  
+  isChecked ? startVegas() : stopVegas();  
+});  
+
+window.addEventListener('DOMContentLoaded', () => {  
+  const savedMode = localStorage.getItem('vegasMode') === 'true';  
+  toggle.checked = savedMode;  
+  if (savedMode) startVegas();  
+});
+  setTimeout(() => {
+    const loading = document.getElementById('loadingScreen');
+    if (loading) loading.remove();
+  }, 1000);
+  </script>  
+  </body>  
 </html>
